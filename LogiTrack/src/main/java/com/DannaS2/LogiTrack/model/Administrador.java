@@ -15,6 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Administrador extends Persona {
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
