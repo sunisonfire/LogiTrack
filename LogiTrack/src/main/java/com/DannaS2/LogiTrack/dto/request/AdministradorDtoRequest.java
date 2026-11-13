@@ -1,10 +1,14 @@
 package com.DannaS2.LogiTrack.dto.request;
 
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public record AdministradorDtoRequest(
+        @NotNull(message = "Los datos de la persona son obligatorios")
+        @Valid
+        PersonaDtoRequest persona,
+
         @NotNull(message = "El username es obligatorio")
         String username,
 

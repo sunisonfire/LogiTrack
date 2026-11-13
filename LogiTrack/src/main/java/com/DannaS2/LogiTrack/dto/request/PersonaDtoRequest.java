@@ -17,8 +17,5 @@ public record PersonaDtoRequest(
 
         @NotBlank(message = "El documento es obligatorio")
         @Size(max = 20, message = "El documento no puede superar 20 caracteres")
-        String documento,
-
-        @NotNull(message = "El tipo de persona es obligatorio")
-        TipoPersona tipoPersona
+        String documento
 ) {}
