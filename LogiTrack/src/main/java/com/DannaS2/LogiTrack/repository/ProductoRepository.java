@@ -1,4 +1,18 @@
 package com.DannaS2.LogiTrack.repository;
 
-public interface ProductoRepository {
+import com.DannaS2.LogiTrack.model.Categoria;
+import com.DannaS2.LogiTrack.model.Producto;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+    List<Producto> findByCategoria(Categoria categoria);
+
+    List<Producto> findByMarcaId(Long marcaId);
+
+    List<Producto> findByCantidadLessThan(Integer limite);
+
+    List<Producto> findByNombreContainingIgnoreCase(String texto);
 }
+
