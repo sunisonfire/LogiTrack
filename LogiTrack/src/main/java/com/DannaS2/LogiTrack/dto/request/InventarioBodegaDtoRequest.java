@@ -7,12 +7,13 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record InventarioBodegaDtoRequest(
-
         @NotNull(message = "La bodega es obligatoria")
-        Bodega bodega,
+        @Positive(message = "El ID de la bodega debe ser positivo")
+        Long bodegaId,
 
         @NotNull(message = "El producto es obligatorio")
-        Producto producto,
+        @Positive(message = "El ID del producto debe ser positivo")
+        Long productoId,
 
         @NotNull(message = "La cantidad es obligatoria")
         @PositiveOrZero(message = "La cantidad no puede ser negativa")

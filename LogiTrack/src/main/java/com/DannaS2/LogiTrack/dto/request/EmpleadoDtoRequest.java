@@ -4,6 +4,7 @@ import com.DannaS2.LogiTrack.model.Bodega;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record EmpleadoDtoRequest(
@@ -20,5 +21,6 @@ public record EmpleadoDtoRequest(
         String password,
 
         @NotNull(message = "La bodega es obligatoria")
-        Bodega bodega
+        @Positive(message = "El ID de la bodega debe ser positivo")
+        Long bodegaId
 ) {}

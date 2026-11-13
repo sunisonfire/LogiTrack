@@ -2,6 +2,7 @@ package com.DannaS2.LogiTrack.mapper;
 
 import com.DannaS2.LogiTrack.dto.request.EmpleadoDtoRequest;
 import com.DannaS2.LogiTrack.dto.response.EmpleadoDtoResponse;
+import com.DannaS2.LogiTrack.model.Bodega;
 import com.DannaS2.LogiTrack.model.Empleado;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class EmpleadoMapper {
         );
     }
 
-    public Empleado DtoToEntity(EmpleadoDtoRequest dto) {
+    public Empleado DtoToEntity(EmpleadoDtoRequest dto, Bodega bodega) {
         if (dto == null) return null;
         Empleado e = new Empleado();
         e.setNombre(dto.persona().nombre());
@@ -33,16 +34,16 @@ public class EmpleadoMapper {
         e.setDocumento(dto.persona().documento());
         e.setUsername(dto.username());
         e.setPassword(dto.password()); // codificar en el servicio antes de guardar
-        e.setBodega(dto.bodega());
+        e.setBodega(bodega);
         return e;
     }
 
-    public void updateEntityToDto(Empleado empleado, EmpleadoDtoRequest dto) {
+    public void updateEntityToDto(Empleado empleado, EmpleadoDtoRequest dto, Bodega bodega) {
         empleado.setNombre(dto.persona().nombre());
         empleado.setApellido(dto.persona().apellido());
         empleado.setDocumento(dto.persona().documento());
         empleado.setUsername(dto.username());
         empleado.setPassword(dto.password()); // codificar en el servicio antes de guardar
-        empleado.setBodega(dto.bodega());
+        empleado.setBodega(bodega);
     }
 }

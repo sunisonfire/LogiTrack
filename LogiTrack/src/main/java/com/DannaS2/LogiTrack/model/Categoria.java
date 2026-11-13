@@ -1,10 +1,14 @@
 package com.DannaS2.LogiTrack.model;
 
 public enum Categoria {
-    ELECTRONICA,
-    ALIMENTOS,
-    BEBIDAS,
-    ASEO,
-    HERRAMIENTAS,
-    ROPA
+    LABIALES,
+    GLOSSES,
+    PESTANINAS,
+    DELINEADORES,
+    BASES,
+    CORRECTORES,
+    POLVOS,
+    RUBORES,
+    ILUMINADORES,
+    SOMBRAS
 }

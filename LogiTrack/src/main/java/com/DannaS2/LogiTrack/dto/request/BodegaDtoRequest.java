@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record BodegaDtoRequest(
-                @NotBlank(message = "El nombre es obligatorio")
+        @NotBlank(message = "El nombre es obligatorio")
         @Size(max = 100, message = "El nombre no puede superar 100 caracteres")
         String nombre,
 
@@ -24,5 +24,5 @@ public record BodegaDtoRequest(
         Integer capacidad,
 
         // encargado_id es NULL en la BD, por eso no lleva @NotNull
-        Persona encargado
+        Long encargadoId
 ) {}

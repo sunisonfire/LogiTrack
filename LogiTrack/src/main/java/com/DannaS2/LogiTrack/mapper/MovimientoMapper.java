@@ -3,8 +3,10 @@ package com.DannaS2.LogiTrack.mapper;
 import com.DannaS2.LogiTrack.dto.request.MovimientoDtoRequest;
 import com.DannaS2.LogiTrack.dto.response.DetalleMovimientoDtoResponse;
 import com.DannaS2.LogiTrack.dto.response.MovimientoDtoResponse;
+import com.DannaS2.LogiTrack.model.Bodega;
 import com.DannaS2.LogiTrack.model.DetalleMovimiento;
 import com.DannaS2.LogiTrack.model.Movimiento;
+import com.DannaS2.LogiTrack.model.Persona;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,31 +41,17 @@ public class MovimientoMapper {
         );
     }
 
-    public Movimiento DtoToEntity(MovimientoDtoRequest dto) {
+    // El service resuelve persona, bodegas y los detalles (con sus productos reales)
+    public Movimiento DtoToEntity(MovimientoDtoRequest dto, Persona persona,
+                                  Bodega origen, Bodega destino,
+                                  List<DetalleMovimiento> detalles) {
         if (dto == null) return null;
         Movimiento m = new Movimiento();
         m.setTipo(dto.tipoMovimiento());
-        m.setPersona(dto.persona());
-        m.setBodegaOrigen(dto.bodegaOrigen());
-        m.setBodegaDestino(dto.bodegaDestino());
-        if (dto.detalles() != null) {
-            for (DetalleMovimiento d : dto.detalles()) {
-                m.agregarDetalle(d); // asigna el movimiento al detalle y lo agrega a la lista
-            }
-        }
+        m.setPersona(persona);
+        m.setBodegaOrigen(origen);
+        m.setBodegaDestino(destino);
+        detalles.forEach(m::agregarDetalle);   // asigna el movimiento a cada detalle
         return m;
-    }
-
-    public void updateEntityToDto(Movimiento mov, MovimientoDtoRequest dto) {
-        mov.setTipo(dto.tipoMovimiento());
-        mov.setPersona(dto.persona());
-        mov.setBodegaOrigen(dto.bodegaOrigen());
-        mov.setBodegaDestino(dto.bodegaDestino());
-        mov.getDetalles().clear(); // orphanRemoval elimina los detalles anteriores
-        if (dto.detalles() != null) {
-            for (DetalleMovimiento d : dto.detalles()) {
-                mov.agregarDetalle(d);
-            }
-        }
     }
 }
