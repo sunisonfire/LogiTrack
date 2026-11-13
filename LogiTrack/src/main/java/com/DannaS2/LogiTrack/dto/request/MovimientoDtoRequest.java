@@ -12,9 +12,6 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 //REVISAR EL ASSERT TRUE!
 public record MovimientoDtoRequest(
-        @Positive(message = "El ID del movimiento debe ser positivo")
-        Long id,
-
         @NotNull(message = "El tipo de movimiento es obligatorio")
         TipoMovimiento tipoMovimiento,
 

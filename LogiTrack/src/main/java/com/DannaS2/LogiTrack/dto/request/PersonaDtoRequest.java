@@ -7,9 +7,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record PersonaDtoRequest(
-        @Positive(message = "El ID de la persona debe ser positivo")
-        Long id,
-
         @NotBlank(message = "El nombre es obligatorio")
         @Size(max = 80, message = "El nombre no puede superar 80 caracteres")
         String nombre,

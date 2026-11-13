@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record DetalleMovimientoDtoRequest(
-        @Positive(message = "El ID del detalle debe ser positivo")
-        Long id,
-
         @NotNull(message = "El movimiento es obligatorio")
         Movimiento movimiento,
 

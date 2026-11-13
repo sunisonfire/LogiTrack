@@ -9,9 +9,6 @@ import jakarta.validation.constraints.Size;
 
 
 public record AuditoriaDtoRequest(
-        @NotNull(message = "El ID en auditoria es obligatorio")
-        @Positive(message = "El ID de auditoria debe ser positivo")
-        Long id,
         @NotNull(message = "La categoría es obligatoria")
         TipoOperacion tipoOperacion,
         @NotNull(message = "La persona es obligatoria")
