@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.LocalDateTime;
@@ -80,5 +81,10 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String mensaje, String codigo) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(LocalDateTime.now(), status.value(), mensaje, codigo));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTipoInvalido(MethodArgumentTypeMismatchException ex) {
+        return build(HttpStatus.BAD_REQUEST, "Valor inválido para el parámetro: " + ex.getName(), "BAD_REQUEST");
     }
 }
