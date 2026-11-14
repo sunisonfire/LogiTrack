@@ -36,7 +36,7 @@ public class BodegaServiceImpl implements BodegaService {
     @Override
     @Transactional
     public BodegaDtoResponse guardar(BodegaDtoRequest dto) {
-        Ciudad ciudad = obtenerCiudad(dto.ciudad());
+        Ciudad ciudad = obtenerCiudad(dto.ciudadId());
         if (bodegaRepository.existsByNombreIgnoreCaseAndCiudadId(dto.nombre(), ciudad.getId())) {
             throw new RecursoDuplicadoException("Ya existe una bodega con ese nombre en esa ciudad");
         }
@@ -49,7 +49,7 @@ public class BodegaServiceImpl implements BodegaService {
     @Transactional
     public BodegaDtoResponse actualizar(BodegaDtoRequest dto, Long id) {
         Bodega bodega = buscarEntidad(id);
-        Ciudad ciudad = obtenerCiudad(dto.ciudad());
+        Ciudad ciudad = obtenerCiudad(dto.ciudadId());
         Persona encargado = obtenerEncargado(dto.encargadoId());
         bodegaMapper.updateEntityToDto(bodega, dto, ciudad, encargado);
         return bodegaMapper.entityToDto(bodega);
@@ -84,10 +84,10 @@ public class BodegaServiceImpl implements BodegaService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Bodega no encontrada: " + id));
     }
 
-    private Ciudad obtenerCiudad(String nombre) {
-        return ciudadRepository.findByNombreIgnoreCase(nombre)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Ciudad no encontrada: " + nombre));
-    }
+    private Ciudad obtenerCiudad(Long id) {
+        return ciudadRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Ciudad no encontrada: " + id));
+    }   // <-- esta llave era la que faltaba
 
     // El encargado es opcional: si no llega encargadoId, la bodega queda sin encargado
     private Persona obtenerEncargado(Long encargadoId) {

@@ -1,6 +1,5 @@
 package com.DannaS2.LogiTrack.dto.request;
 
-import com.DannaS2.LogiTrack.model.Bodega;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

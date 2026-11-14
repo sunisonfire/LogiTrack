@@ -1,7 +1,6 @@
 package com.DannaS2.LogiTrack.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record MarcaDtoRequest(

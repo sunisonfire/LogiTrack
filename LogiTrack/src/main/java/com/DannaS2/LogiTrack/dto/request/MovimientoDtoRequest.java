@@ -1,8 +1,5 @@
 package com.DannaS2.LogiTrack.dto.request;
 
-import com.DannaS2.LogiTrack.model.Bodega;
-import com.DannaS2.LogiTrack.model.DetalleMovimiento;
-import com.DannaS2.LogiTrack.model.Persona;
 import com.DannaS2.LogiTrack.model.TipoMovimiento;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;

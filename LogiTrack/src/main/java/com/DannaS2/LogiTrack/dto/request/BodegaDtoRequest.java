@@ -1,6 +1,5 @@
 package com.DannaS2.LogiTrack.dto.request;
 
-import com.DannaS2.LogiTrack.model.Persona;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -15,9 +14,9 @@ public record BodegaDtoRequest(
         @Size(max = 150, message = "La ubicación no puede superar 150 caracteres")
         String ubicacion,
 
-        @NotBlank(message = "La ciudad es obligatoria")
-        @Size(max = 80, message = "La ciudad no puede superar 80 caracteres")
-        String ciudad,
+        @NotNull(message = "La ciudad es obligatoria")
+        @Positive(message = "El ID de la ciudad debe ser positivo")
+        Long ciudadId,
 
         @NotNull(message = "La capacidad es obligatoria")
         @Positive(message = "La capacidad debe ser mayor que 0")

@@ -1,9 +1,6 @@
 package com.DannaS2.LogiTrack.dto.request;
 
-import com.DannaS2.LogiTrack.model.TipoPersona;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record PersonaDtoRequest(
