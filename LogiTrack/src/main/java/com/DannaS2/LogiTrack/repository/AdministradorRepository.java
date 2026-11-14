@@ -8,10 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
-    Optional<Persona> findByDocumento(String documento);
-
-    boolean existsByDocumento(String documento);
-
     Optional<Administrador> findByUsername(String username);
 
     boolean existsByUsername(String username);

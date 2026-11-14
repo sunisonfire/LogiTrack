@@ -15,4 +15,6 @@ public interface InventarioBodegaRepository extends JpaRepository<InventarioBode
     Optional<InventarioBodega> findByBodegaIdAndProductoId(Long bodegaId, Long productoId);
 
     boolean existsByBodegaIdAndProductoId(Long bodegaId, Long productoId);
+
+    List<InventarioBodega> findByCantidadLessThan(Integer limite);
 }

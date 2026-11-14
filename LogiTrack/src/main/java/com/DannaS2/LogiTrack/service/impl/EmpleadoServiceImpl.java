@@ -41,8 +41,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (empleadoRepository.existsByUsername(dto.username())) {
             throw new RecursoDuplicadoException("El username ya está en uso");
         }
-        Empleado empleado = empleadoMapper.DtoToEntity(dto);
-        empleado.setBodega(obtenerBodega(dto.bodega().getId()));   // entidad real desde la BD
+        Bodega bodega = obtenerBodega(dto.bodegaId());                  // CAMBIO: por id
+        Empleado empleado = empleadoMapper.DtoToEntity(dto, bodega);    // CAMBIO: el mapper recibe la bodega
         // TODO (al hacer seguridad): codificar la contraseña
         return empleadoMapper.entityToDto(empleadoRepository.save(empleado));
     }
@@ -57,8 +57,8 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoRepository.findByUsername(dto.username())
                 .filter(e -> !e.getId().equals(id))
                 .ifPresent(e -> { throw new RecursoDuplicadoException("El username ya está en uso"); });
-        empleadoMapper.updateEntityToDto(empleado, dto);
-        empleado.setBodega(obtenerBodega(dto.bodega().getId()));
+        Bodega bodega = obtenerBodega(dto.bodegaId());                  // CAMBIO
+        empleadoMapper.updateEntityToDto(empleado, dto, bodega);        // CAMBIO
         // TODO (al hacer seguridad): codificar la contraseña
         return empleadoMapper.entityToDto(empleado);
     }

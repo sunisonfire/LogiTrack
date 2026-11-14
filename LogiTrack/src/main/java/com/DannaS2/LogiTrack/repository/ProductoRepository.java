@@ -11,8 +11,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     List<Producto> findByMarcaId(Long marcaId);
 
-    List<Producto> findByCantidadLessThan(Integer limite);
-
     List<Producto> findByNombreContainingIgnoreCase(String texto);
 }
 
