@@ -1,0 +1,98 @@
+package com.DannaS2.LogiTrack.service.impl;
+
+import com.DannaS2.LogiTrack.dto.request.BodegaDtoRequest;
+import com.DannaS2.LogiTrack.dto.response.BodegaDtoResponse;
+import com.DannaS2.LogiTrack.exception.RecursoDuplicadoException;
+import com.DannaS2.LogiTrack.exception.RecursoNoEncontradoException;
+import com.DannaS2.LogiTrack.mapper.BodegaMapper;
+import com.DannaS2.LogiTrack.model.Bodega;
+import com.DannaS2.LogiTrack.model.Ciudad;
+import com.DannaS2.LogiTrack.model.Persona;
+import com.DannaS2.LogiTrack.repository.BodegaRepository;
+import com.DannaS2.LogiTrack.repository.CiudadRepository;
+import com.DannaS2.LogiTrack.repository.PersonaRepository;
+import com.DannaS2.LogiTrack.service.BodegaService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+public class BodegaServiceImpl implements BodegaService {
+
+    private final BodegaRepository bodegaRepository;
+    private final CiudadRepository ciudadRepository;
+    private final PersonaRepository personaRepository;
+    private final BodegaMapper bodegaMapper;
+
+    public BodegaServiceImpl(BodegaRepository bodegaRepository, CiudadRepository ciudadRepository,
+                             PersonaRepository personaRepository, BodegaMapper bodegaMapper) {
+        this.bodegaRepository = bodegaRepository;
+        this.ciudadRepository = ciudadRepository;
+        this.personaRepository = personaRepository;
+        this.bodegaMapper = bodegaMapper;
+    }
+
+    @Override
+    @Transactional
+    public BodegaDtoResponse guardar(BodegaDtoRequest dto) {
+        Ciudad ciudad = obtenerCiudad(dto.ciudad());
+        if (bodegaRepository.existsByNombreIgnoreCaseAndCiudadId(dto.nombre(), ciudad.getId())) {
+            throw new RecursoDuplicadoException("Ya existe una bodega con ese nombre en esa ciudad");
+        }
+        Persona encargado = obtenerEncargado(dto.encargadoId());
+        Bodega bodega = bodegaMapper.DtoToEntity(dto, ciudad, encargado);
+        return bodegaMapper.entityToDto(bodegaRepository.save(bodega));
+    }
+
+    @Override
+    @Transactional
+    public BodegaDtoResponse actualizar(BodegaDtoRequest dto, Long id) {
+        Bodega bodega = buscarEntidad(id);
+        Ciudad ciudad = obtenerCiudad(dto.ciudad());
+        Persona encargado = obtenerEncargado(dto.encargadoId());
+        bodegaMapper.updateEntityToDto(bodega, dto, ciudad, encargado);
+        return bodegaMapper.entityToDto(bodega);
+    }
+
+    @Override
+    @Transactional
+    public void eliminar(Long id) {
+        bodegaRepository.delete(buscarEntidad(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BodegaDtoResponse> listar() {
+        return bodegaRepository.findAll().stream().map(bodegaMapper::entityToDto).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BodegaDtoResponse buscarId(Long id) {
+        return bodegaMapper.entityToDto(buscarEntidad(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BodegaDtoResponse> buscarCiudad(Long ciudadId) {
+        return bodegaRepository.findByCiudadId(ciudadId).stream().map(bodegaMapper::entityToDto).toList();
+    }
+
+    private Bodega buscarEntidad(Long id) {
+        return bodegaRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Bodega no encontrada: " + id));
+    }
+
+    private Ciudad obtenerCiudad(String nombre) {
+        return ciudadRepository.findByNombreIgnoreCase(nombre)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Ciudad no encontrada: " + nombre));
+    }
+
+    // El encargado es opcional: si no llega encargadoId, la bodega queda sin encargado
+    private Persona obtenerEncargado(Long encargadoId) {
+        if (encargadoId == null) return null;
+        return personaRepository.findById(encargadoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Encargado no encontrado: " + encargadoId));
+    }
+}
