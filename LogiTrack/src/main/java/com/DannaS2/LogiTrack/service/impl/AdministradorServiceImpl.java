@@ -9,6 +9,7 @@ import com.DannaS2.LogiTrack.model.Administrador;
 import com.DannaS2.LogiTrack.repository.AdministradorRepository;
 import com.DannaS2.LogiTrack.repository.PersonaRepository;
 import com.DannaS2.LogiTrack.service.AdministradorService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +21,16 @@ public class AdministradorServiceImpl implements AdministradorService {
     private final AdministradorRepository administradorRepository;
     private final PersonaRepository personaRepository;
     private final AdministradorMapper administradorMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public AdministradorServiceImpl(AdministradorRepository administradorRepository,
                                     PersonaRepository personaRepository,
-                                    AdministradorMapper administradorMapper) {
+                                    AdministradorMapper administradorMapper,
+                                    PasswordEncoder passwordEncoder) {
         this.administradorRepository = administradorRepository;
         this.personaRepository = personaRepository;
         this.administradorMapper = administradorMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class AdministradorServiceImpl implements AdministradorService {
             throw new RecursoDuplicadoException("El username ya está en uso");
         }
         Administrador admin = administradorMapper.DtoToEntity(dto);
-        // TODO (al hacer seguridad): admin.setPassword(passwordEncoder.encode(dto.password()));
+        admin.setPassword(passwordEncoder.encode(dto.password()));   // contraseña cifrada
         return administradorMapper.entityToDto(administradorRepository.save(admin));
     }
 
@@ -54,7 +58,7 @@ public class AdministradorServiceImpl implements AdministradorService {
                 .filter(a -> !a.getId().equals(id))
                 .ifPresent(a -> { throw new RecursoDuplicadoException("El username ya está en uso"); });
         administradorMapper.updateEntityToDto(admin, dto);
-        // TODO (al hacer seguridad): codificar la contraseña
+        admin.setPassword(passwordEncoder.encode(dto.password()));   // contraseña cifrada
         return administradorMapper.entityToDto(admin);
     }
 

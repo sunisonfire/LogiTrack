@@ -11,6 +11,7 @@ import com.DannaS2.LogiTrack.repository.BodegaRepository;
 import com.DannaS2.LogiTrack.repository.EmpleadoRepository;
 import com.DannaS2.LogiTrack.repository.PersonaRepository;
 import com.DannaS2.LogiTrack.service.EmpleadoService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,16 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     private final PersonaRepository personaRepository;
     private final BodegaRepository bodegaRepository;
     private final EmpleadoMapper empleadoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public EmpleadoServiceImpl(EmpleadoRepository empleadoRepository, PersonaRepository personaRepository,
-                               BodegaRepository bodegaRepository, EmpleadoMapper empleadoMapper) {
+                               BodegaRepository bodegaRepository, EmpleadoMapper empleadoMapper,
+                               PasswordEncoder passwordEncoder) {
         this.empleadoRepository = empleadoRepository;
         this.personaRepository = personaRepository;
         this.bodegaRepository = bodegaRepository;
         this.empleadoMapper = empleadoMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -41,9 +45,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (empleadoRepository.existsByUsername(dto.username())) {
             throw new RecursoDuplicadoException("El username ya está en uso");
         }
-        Bodega bodega = obtenerBodega(dto.bodegaId());                  // CAMBIO: por id
-        Empleado empleado = empleadoMapper.DtoToEntity(dto, bodega);    // CAMBIO: el mapper recibe la bodega
-        // TODO (al hacer seguridad): codificar la contraseña
+        Bodega bodega = obtenerBodega(dto.bodegaId());
+        Empleado empleado = empleadoMapper.DtoToEntity(dto, bodega);
+        empleado.setPassword(passwordEncoder.encode(dto.password()));   // contraseña cifrada
         return empleadoMapper.entityToDto(empleadoRepository.save(empleado));
     }
 
@@ -57,9 +61,9 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         empleadoRepository.findByUsername(dto.username())
                 .filter(e -> !e.getId().equals(id))
                 .ifPresent(e -> { throw new RecursoDuplicadoException("El username ya está en uso"); });
-        Bodega bodega = obtenerBodega(dto.bodegaId());                  // CAMBIO
-        empleadoMapper.updateEntityToDto(empleado, dto, bodega);        // CAMBIO
-        // TODO (al hacer seguridad): codificar la contraseña
+        Bodega bodega = obtenerBodega(dto.bodegaId());
+        empleadoMapper.updateEntityToDto(empleado, dto, bodega);
+        empleado.setPassword(passwordEncoder.encode(dto.password()));   // contraseña cifrada
         return empleadoMapper.entityToDto(empleado);
     }
 

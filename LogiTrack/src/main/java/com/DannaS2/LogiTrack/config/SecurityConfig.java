@@ -35,7 +35,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())   // API REST con JWT (sin sesiones)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .accessDeniedHandler((request, response, ex) ->
+                                response.setStatus(HttpStatus.FORBIDDEN.value()))
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Públicos
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
