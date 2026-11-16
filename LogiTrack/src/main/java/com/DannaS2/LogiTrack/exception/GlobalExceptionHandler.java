@@ -77,7 +77,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor", "INTERNAL_SERVER_ERROR");
     }
 
-    // Método auxiliar: evita repetir el new ErrorResponse(...) en cada handler
+    // Metodo auxiliar: evita repetir el new ErrorResponse(...) en cada handler
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String mensaje, String codigo) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(LocalDateTime.now(), status.value(), mensaje, codigo));
@@ -86,5 +86,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTipoInvalido(MethodArgumentTypeMismatchException ex) {
         return build(HttpStatus.BAD_REQUEST, "Valor inválido para el parámetro: " + ex.getName(), "BAD_REQUEST");
+    }
+
+    // 401: login con usuario, contraseña o rol incorrectos
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ErrorResponse> handleCredenciales(CredencialesInvalidasException ex) {
+        return build(HttpStatus.UNAUTHORIZED, ex.getMessage(), "INVALID_CREDENTIALS");
     }
 }
