@@ -27,6 +27,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     private final InventarioBodegaRepository inventarioRepository;
     private final MovimientoMapper movimientoMapper;
     private final DetalleMovimientoMapper detalleMapper;
+    private final AuditoriaRegistroService auditoriaRegistroService;
 
     @Override
     @Transactional
@@ -45,7 +46,10 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
 
         Movimiento movimiento = movimientoMapper.DtoToEntity(dto, persona, origen, destino, detalles);
-        return movimientoMapper.entityToDto(movimientoRepository.save(movimiento));
+        Movimiento guardado = movimientoRepository.save(movimiento);
+        MovimientoDtoResponse response = movimientoMapper.entityToDto(guardado);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "MOVIMIENTO", guardado.getId(), null, response);
+        return response;
     }
 
     @Override

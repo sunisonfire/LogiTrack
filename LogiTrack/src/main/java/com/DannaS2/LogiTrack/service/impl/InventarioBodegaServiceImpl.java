@@ -27,6 +27,7 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
     private final BodegaRepository bodegaRepository;
     private final ProductoRepository productoRepository;
     private final InventarioBodegaMapper inventarioMapper;
+    private final AuditoriaRegistroService auditoriaRegistroService;
 
     @Override
     @Transactional
@@ -37,7 +38,10 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
             throw new RecursoDuplicadoException("Ese producto ya tiene inventario en esa bodega");
         }
         InventarioBodega inv = inventarioMapper.DtoToEntity(dto, bodega, producto);
-        return inventarioMapper.entityToDto(inventarioRepository.save(inv));
+        InventarioBodega guardado = inventarioRepository.save(inv);
+        InventarioBodegaDtoResponse response = inventarioMapper.entityToDto(guardado);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "INVENTARIO_BODEGA", guardado.getId(), null, response);
+        return response;
     }
 
     @Override
@@ -49,14 +53,20 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
                 || !inv.getProducto().getId().equals(dto.productoId())) {
             throw new BusinessRuleException("No se puede cambiar la bodega ni el producto de un inventario");
         }
+        InventarioBodegaDtoResponse anterior = inventarioMapper.entityToDto(inv);
         inventarioMapper.updateEntityToDto(inv, dto);
-        return inventarioMapper.entityToDto(inv);
+        InventarioBodegaDtoResponse actualizado = inventarioMapper.entityToDto(inv);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "INVENTARIO_BODEGA", inv.getId(), anterior, actualizado);
+        return actualizado;
     }
 
     @Override
     @Transactional
     public void eliminar(Long id) {
-        inventarioRepository.delete(buscarEntidad(id));
+        InventarioBodega inv = buscarEntidad(id);
+        InventarioBodegaDtoResponse anterior = inventarioMapper.entityToDto(inv);
+        inventarioRepository.delete(inv);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "INVENTARIO_BODEGA", id, anterior, null);
     }
 
     @Override

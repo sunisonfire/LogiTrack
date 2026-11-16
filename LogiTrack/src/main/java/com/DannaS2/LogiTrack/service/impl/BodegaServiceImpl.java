@@ -24,13 +24,16 @@ public class BodegaServiceImpl implements BodegaService {
     private final CiudadRepository ciudadRepository;
     private final PersonaRepository personaRepository;
     private final BodegaMapper bodegaMapper;
+    private final AuditoriaRegistroService auditoriaRegistroService;
 
     public BodegaServiceImpl(BodegaRepository bodegaRepository, CiudadRepository ciudadRepository,
-                             PersonaRepository personaRepository, BodegaMapper bodegaMapper) {
+                             PersonaRepository personaRepository, BodegaMapper bodegaMapper,
+                             AuditoriaRegistroService auditoriaRegistroService) {
         this.bodegaRepository = bodegaRepository;
         this.ciudadRepository = ciudadRepository;
         this.personaRepository = personaRepository;
         this.bodegaMapper = bodegaMapper;
+        this.auditoriaRegistroService = auditoriaRegistroService;
     }
 
     @Override
@@ -42,7 +45,10 @@ public class BodegaServiceImpl implements BodegaService {
         }
         Persona encargado = obtenerEncargado(dto.encargadoId());
         Bodega bodega = bodegaMapper.DtoToEntity(dto, ciudad, encargado);
-        return bodegaMapper.entityToDto(bodegaRepository.save(bodega));
+        Bodega guardada = bodegaRepository.save(bodega);
+        BodegaDtoResponse response = bodegaMapper.entityToDto(guardada);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "BODEGA", guardada.getId(), null, response);
+        return response;
     }
 
     @Override
@@ -51,14 +57,20 @@ public class BodegaServiceImpl implements BodegaService {
         Bodega bodega = buscarEntidad(id);
         Ciudad ciudad = obtenerCiudad(dto.ciudadId());
         Persona encargado = obtenerEncargado(dto.encargadoId());
+        BodegaDtoResponse anterior = bodegaMapper.entityToDto(bodega);
         bodegaMapper.updateEntityToDto(bodega, dto, ciudad, encargado);
-        return bodegaMapper.entityToDto(bodega);
+        BodegaDtoResponse actualizada = bodegaMapper.entityToDto(bodega);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "BODEGA", bodega.getId(), anterior, actualizada);
+        return actualizada;
     }
 
     @Override
     @Transactional
     public void eliminar(Long id) {
-        bodegaRepository.delete(buscarEntidad(id));
+        Bodega bodega = buscarEntidad(id);
+        BodegaDtoResponse anterior = bodegaMapper.entityToDto(bodega);
+        bodegaRepository.delete(bodega);
+        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "BODEGA", id, anterior, null);
     }
 
     @Override
