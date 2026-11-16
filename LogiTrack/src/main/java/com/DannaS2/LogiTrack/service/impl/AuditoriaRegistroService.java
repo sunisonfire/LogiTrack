@@ -9,8 +9,8 @@ import com.DannaS2.LogiTrack.model.TipoOperacion;
 import com.DannaS2.LogiTrack.repository.AdministradorRepository;
 import com.DannaS2.LogiTrack.repository.AuditoriaRepository;
 import com.DannaS2.LogiTrack.repository.EmpleadoRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +24,7 @@ public class AuditoriaRegistroService {
     private final AuditoriaRepository auditoriaRepository;
     private final AdministradorRepository administradorRepository;
     private final EmpleadoRepository empleadoRepository;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper objectMapper;
 
     @Transactional(propagation = Propagation.MANDATORY)
     public void registrar(TipoOperacion tipoOperacion, String entidad, Long entidadId,
@@ -62,10 +62,14 @@ public class AuditoriaRegistroService {
 
     private String toJson(Object value) {
         if (value == null) return null;
+
         try {
             return objectMapper.writeValueAsString(value);
-        } catch (JsonProcessingException exception) {
-            throw new IllegalStateException("No fue posible serializar los datos de auditoría", exception);
+        } catch (JacksonException exception) {
+            throw new IllegalStateException(
+                    "No fue posible serializar los datos de auditoría",
+                    exception
+            );
         }
     }
 }
