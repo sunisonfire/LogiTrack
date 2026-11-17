@@ -7,6 +7,7 @@ import com.DannaS2.LogiTrack.mapper.ProductoMapper;
 import com.DannaS2.LogiTrack.model.*;
 import com.DannaS2.LogiTrack.repository.MarcaRepository;
 import com.DannaS2.LogiTrack.repository.ProductoRepository;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 import com.DannaS2.LogiTrack.service.ProductoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,16 +20,16 @@ public class ProductoServiceImpl implements ProductoService {
     private final ProductoRepository productoRepository;
     private final MarcaRepository marcaRepository;
     private final ProductoMapper productoMapper;
-    private final AuditoriaRegistroService auditoriaRegistroService;
+    private final AuditoriaService auditoriaService;
 
     public ProductoServiceImpl(ProductoRepository productoRepository,
                                MarcaRepository marcaRepository,
                                ProductoMapper productoMapper,
-                               AuditoriaRegistroService auditoriaRegistroService) {
+                               AuditoriaService auditoriaService) {
         this.productoRepository = productoRepository;
         this.marcaRepository = marcaRepository;
         this.productoMapper = productoMapper;
-        this.auditoriaRegistroService = auditoriaRegistroService;
+        this.auditoriaService = auditoriaService;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ProductoServiceImpl implements ProductoService {
         Marca marca = buscarMarca(dto.marcaId());
         Producto guardado = productoRepository.save(productoMapper.DtoToEntity(dto, marca));
         ProductoDtoResponse response = productoMapper.entityToDto(guardado);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "PRODUCTO", guardado.getId(), null, response);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "PRODUCTO", guardado.getId(), null, response);
         return response;
     }
 
@@ -49,7 +50,7 @@ public class ProductoServiceImpl implements ProductoService {
         ProductoDtoResponse anterior = productoMapper.entityToDto(producto);
         productoMapper.updateEntityToDto(producto, dto, marca);
         ProductoDtoResponse actualizado = productoMapper.entityToDto(producto);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "PRODUCTO", producto.getId(), anterior, actualizado);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "PRODUCTO", producto.getId(), anterior, actualizado);
         return actualizado;
     }
 
@@ -59,7 +60,7 @@ public class ProductoServiceImpl implements ProductoService {
         Producto producto = buscarEntidad(id);
         ProductoDtoResponse anterior = productoMapper.entityToDto(producto);
         productoRepository.delete(producto);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "PRODUCTO", id, anterior, null);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "PRODUCTO", id, anterior, null);
     }
 
     @Override

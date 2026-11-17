@@ -13,4 +13,12 @@ public interface AuditoriaService {
     List<AuditoriaDtoResponse> buscarTipo(TipoOperacion tipo);
     List<AuditoriaDtoResponse> buscarEntidad(String entidad, Long entidadId);
     List<AuditoriaDtoResponse> buscarFechas(LocalDateTime desde, LocalDateTime hasta);
+
+    void registrar(
+            TipoOperacion tipoOperacion,
+            String entidad,
+            Long entidadId,
+            Object valoresAnteriores,
+            Object valoresNuevos
+    );
 }

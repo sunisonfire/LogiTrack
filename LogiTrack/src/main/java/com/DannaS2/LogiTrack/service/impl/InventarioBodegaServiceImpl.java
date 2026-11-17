@@ -12,6 +12,7 @@ import com.DannaS2.LogiTrack.model.Producto;
 import com.DannaS2.LogiTrack.repository.BodegaRepository;
 import com.DannaS2.LogiTrack.repository.InventarioBodegaRepository;
 import com.DannaS2.LogiTrack.repository.ProductoRepository;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 import com.DannaS2.LogiTrack.service.InventarioBodegaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
     private final BodegaRepository bodegaRepository;
     private final ProductoRepository productoRepository;
     private final InventarioBodegaMapper inventarioMapper;
-    private final AuditoriaRegistroService auditoriaRegistroService;
+    private final AuditoriaService auditoriaService;
 
     @Override
     @Transactional
@@ -40,7 +41,7 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
         InventarioBodega inv = inventarioMapper.DtoToEntity(dto, bodega, producto);
         InventarioBodega guardado = inventarioRepository.save(inv);
         InventarioBodegaDtoResponse response = inventarioMapper.entityToDto(guardado);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "INVENTARIO_BODEGA", guardado.getId(), null, response);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "INVENTARIO_BODEGA", guardado.getId(), null, response);
         return response;
     }
 
@@ -56,7 +57,7 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
         InventarioBodegaDtoResponse anterior = inventarioMapper.entityToDto(inv);
         inventarioMapper.updateEntityToDto(inv, dto);
         InventarioBodegaDtoResponse actualizado = inventarioMapper.entityToDto(inv);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "INVENTARIO_BODEGA", inv.getId(), anterior, actualizado);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "INVENTARIO_BODEGA", inv.getId(), anterior, actualizado);
         return actualizado;
     }
 
@@ -66,7 +67,7 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
         InventarioBodega inv = buscarEntidad(id);
         InventarioBodegaDtoResponse anterior = inventarioMapper.entityToDto(inv);
         inventarioRepository.delete(inv);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "INVENTARIO_BODEGA", id, anterior, null);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "INVENTARIO_BODEGA", id, anterior, null);
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.DannaS2.LogiTrack.mapper.DetalleMovimientoMapper;
 import com.DannaS2.LogiTrack.mapper.MovimientoMapper;
 import com.DannaS2.LogiTrack.model.*;
 import com.DannaS2.LogiTrack.repository.*;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 import com.DannaS2.LogiTrack.service.MovimientoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     private final InventarioBodegaRepository inventarioRepository;
     private final MovimientoMapper movimientoMapper;
     private final DetalleMovimientoMapper detalleMapper;
-    private final AuditoriaRegistroService auditoriaRegistroService;
+    private final AuditoriaService auditoriaService;
 
     @Override
     @Transactional
@@ -48,7 +49,7 @@ public class MovimientoServiceImpl implements MovimientoService {
         Movimiento movimiento = movimientoMapper.DtoToEntity(dto, persona, origen, destino, detalles);
         Movimiento guardado = movimientoRepository.save(movimiento);
         MovimientoDtoResponse response = movimientoMapper.entityToDto(guardado);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "MOVIMIENTO", guardado.getId(), null, response);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "MOVIMIENTO", guardado.getId(), null, response);
         return response;
     }
 

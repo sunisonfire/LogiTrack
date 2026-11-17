@@ -11,6 +11,7 @@ import com.DannaS2.LogiTrack.model.Persona;
 import com.DannaS2.LogiTrack.repository.BodegaRepository;
 import com.DannaS2.LogiTrack.repository.CiudadRepository;
 import com.DannaS2.LogiTrack.repository.PersonaRepository;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 import com.DannaS2.LogiTrack.service.BodegaService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,16 +25,16 @@ public class BodegaServiceImpl implements BodegaService {
     private final CiudadRepository ciudadRepository;
     private final PersonaRepository personaRepository;
     private final BodegaMapper bodegaMapper;
-    private final AuditoriaRegistroService auditoriaRegistroService;
+    private final AuditoriaService auditoriaService;
 
     public BodegaServiceImpl(BodegaRepository bodegaRepository, CiudadRepository ciudadRepository,
                              PersonaRepository personaRepository, BodegaMapper bodegaMapper,
-                             AuditoriaRegistroService auditoriaRegistroService) {
+                             AuditoriaService auditoriaService) {
         this.bodegaRepository = bodegaRepository;
         this.ciudadRepository = ciudadRepository;
         this.personaRepository = personaRepository;
         this.bodegaMapper = bodegaMapper;
-        this.auditoriaRegistroService = auditoriaRegistroService;
+        this.auditoriaService = auditoriaService;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class BodegaServiceImpl implements BodegaService {
         Bodega bodega = bodegaMapper.DtoToEntity(dto, ciudad, encargado);
         Bodega guardada = bodegaRepository.save(bodega);
         BodegaDtoResponse response = bodegaMapper.entityToDto(guardada);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "BODEGA", guardada.getId(), null, response);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.INSERT, "BODEGA", guardada.getId(), null, response);
         return response;
     }
 
@@ -60,7 +61,7 @@ public class BodegaServiceImpl implements BodegaService {
         BodegaDtoResponse anterior = bodegaMapper.entityToDto(bodega);
         bodegaMapper.updateEntityToDto(bodega, dto, ciudad, encargado);
         BodegaDtoResponse actualizada = bodegaMapper.entityToDto(bodega);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "BODEGA", bodega.getId(), anterior, actualizada);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.UPDATE, "BODEGA", bodega.getId(), anterior, actualizada);
         return actualizada;
     }
 
@@ -70,7 +71,7 @@ public class BodegaServiceImpl implements BodegaService {
         Bodega bodega = buscarEntidad(id);
         BodegaDtoResponse anterior = bodegaMapper.entityToDto(bodega);
         bodegaRepository.delete(bodega);
-        auditoriaRegistroService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "BODEGA", id, anterior, null);
+        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "BODEGA", id, anterior, null);
     }
 
     @Override
