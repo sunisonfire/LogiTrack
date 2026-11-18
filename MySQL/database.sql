@@ -269,4 +269,8 @@ CREATE TABLE solicitud_registro (
         REFERENCES persona(id),
 
     INDEX idx_solicitud_estado (estado)
+<<<<<<< HEAD
 ) ENGINE=InnoDB;
+=======
+) ENGINE=InnoDB;
+>>>>>>> bc46424b32b1cf9443d076340891008e5869eb53
