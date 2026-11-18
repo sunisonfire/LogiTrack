@@ -16,10 +16,13 @@ public class EmpleadoMapper {
     }
 
     public EmpleadoDtoResponse entityToDto(Empleado empleado) {
-        if (empleado == null) return null;
+        if (empleado == null) {
+            return null;
+        }
+
         return new EmpleadoDtoResponse(
                 empleado.getId(),
-                personaMapper.entityToDto(empleado), // Empleado es una Persona
+                personaMapper.entityToDto(empleado),
                 empleado.getUsername(),
                 empleado.getBodega() != null ? empleado.getBodega().getId() : null,
                 empleado.getBodega() != null ? empleado.getBodega().getNombre() : null
@@ -27,23 +30,29 @@ public class EmpleadoMapper {
     }
 
     public Empleado DtoToEntity(EmpleadoDtoRequest dto, Bodega bodega) {
-        if (dto == null) return null;
-        Empleado e = new Empleado();
-        e.setNombre(dto.persona().nombre());
-        e.setApellido(dto.persona().apellido());
-        e.setDocumento(dto.persona().documento());
-        e.setUsername(dto.username());
-        e.setPassword(dto.password()); // codificar en el servicio antes de guardar
-        e.setBodega(bodega);
-        return e;
-    }
+        if (dto == null) {
+            return null;
+        }
 
-    public void updateEntityToDto(Empleado empleado, EmpleadoDtoRequest dto, Bodega bodega) {
+        Empleado empleado = new Empleado();
         empleado.setNombre(dto.persona().nombre());
         empleado.setApellido(dto.persona().apellido());
         empleado.setDocumento(dto.persona().documento());
         empleado.setUsername(dto.username());
-        empleado.setPassword(dto.password()); // codificar en el servicio antes de guardar
+        empleado.setBodega(bodega);
+
+        return empleado;
+    }
+
+    public void updateEntityToDto(
+            Empleado empleado,
+            EmpleadoDtoRequest dto,
+            Bodega bodega
+    ) {
+        empleado.setNombre(dto.persona().nombre());
+        empleado.setApellido(dto.persona().apellido());
+        empleado.setDocumento(dto.persona().documento());
+        empleado.setUsername(dto.username());
         empleado.setBodega(bodega);
     }
 }
