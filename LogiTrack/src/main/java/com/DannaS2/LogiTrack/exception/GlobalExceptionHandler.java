@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -17,6 +19,9 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // 404: el recurso no existe
     @ExceptionHandler(RecursoNoEncontradoException.class)
@@ -74,7 +79,14 @@ public class GlobalExceptionHandler {
     // 500: cualquier otra cosa no controlada
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericErrors(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Error interno del servidor", "INTERNAL_SERVER_ERROR");
+
+        log.error("Error inesperado al procesar la solicitud", ex);
+
+        return build(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error interno del servidor",
+                "INTERNAL_SERVER_ERROR"
+        );
     }
 
     // Metodo auxiliar: evita repetir el new ErrorResponse(...) en cada handler

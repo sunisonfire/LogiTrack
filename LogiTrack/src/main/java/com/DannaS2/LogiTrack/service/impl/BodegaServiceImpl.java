@@ -15,6 +15,9 @@ import com.DannaS2.LogiTrack.service.AuditoriaService;
 import com.DannaS2.LogiTrack.service.BodegaService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.DannaS2.LogiTrack.repository.EmpleadoRepository;
+import com.DannaS2.LogiTrack.repository.InventarioBodegaRepository;
+import com.DannaS2.LogiTrack.repository.MovimientoRepository;
 
 import java.util.List;
 
@@ -26,15 +29,28 @@ public class BodegaServiceImpl implements BodegaService {
     private final PersonaRepository personaRepository;
     private final BodegaMapper bodegaMapper;
     private final AuditoriaService auditoriaService;
+    private final EmpleadoRepository empleadoRepository;
+    private final InventarioBodegaRepository inventarioBodegaRepository;
+    private final MovimientoRepository movimientoRepository;
 
-    public BodegaServiceImpl(BodegaRepository bodegaRepository, CiudadRepository ciudadRepository,
-                             PersonaRepository personaRepository, BodegaMapper bodegaMapper,
-                             AuditoriaService auditoriaService) {
+    public BodegaServiceImpl(
+            BodegaRepository bodegaRepository,
+            CiudadRepository ciudadRepository,
+            PersonaRepository personaRepository,
+            BodegaMapper bodegaMapper,
+            AuditoriaService auditoriaService,
+            EmpleadoRepository empleadoRepository,
+            InventarioBodegaRepository inventarioBodegaRepository,
+            MovimientoRepository movimientoRepository
+    ) {
         this.bodegaRepository = bodegaRepository;
         this.ciudadRepository = ciudadRepository;
         this.personaRepository = personaRepository;
         this.bodegaMapper = bodegaMapper;
         this.auditoriaService = auditoriaService;
+        this.empleadoRepository = empleadoRepository;
+        this.inventarioBodegaRepository = inventarioBodegaRepository;
+        this.movimientoRepository = movimientoRepository;
     }
 
     @Override
@@ -69,9 +85,40 @@ public class BodegaServiceImpl implements BodegaService {
     @Transactional
     public void eliminar(Long id) {
         Bodega bodega = buscarEntidad(id);
+
+        // Verificar empleados asignados
+        if (!empleadoRepository.findByBodegaId(id).isEmpty()) {
+            throw new RecursoDuplicadoException(
+                    "No se puede eliminar la bodega porque tiene empleados asignados"
+            );
+        }
+
+        // Verificar inventario registrado
+        if (!inventarioBodegaRepository.findByBodegaId(id).isEmpty()) {
+            throw new RecursoDuplicadoException(
+                    "No se puede eliminar la bodega porque tiene inventario registrado"
+            );
+        }
+
+        // Verificar movimientos relacionados
+        if (!movimientoRepository.findByBodegaOrigenId(id).isEmpty()
+                || !movimientoRepository.findByBodegaDestinoId(id).isEmpty()) {
+            throw new RecursoDuplicadoException(
+                    "No se puede eliminar la bodega porque tiene movimientos asociados"
+            );
+        }
+
         BodegaDtoResponse anterior = bodegaMapper.entityToDto(bodega);
+
         bodegaRepository.delete(bodega);
-        auditoriaService.registrar(com.DannaS2.LogiTrack.model.TipoOperacion.DELETE, "BODEGA", id, anterior, null);
+
+        auditoriaService.registrar(
+                com.DannaS2.LogiTrack.model.TipoOperacion.DELETE,
+                "BODEGA",
+                id,
+                anterior,
+                null
+        );
     }
 
     @Override
