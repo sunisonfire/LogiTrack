@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())   // API REST con JWT (sin sesiones)
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -47,16 +47,29 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
 
                         // Solo ADMIN
-                        .requestMatchers("/api/administrador/**", "/api/empleado/**",
-                                "/api/persona/**", "/api/auditoria/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                "/api/administrador/**",
+                                "/api/empleado/**",
+                                "/api/persona/**",
+                                "/api/auditoria/**",
+                                "/api/solicitudes-registro/**"
+                        ).hasRole("ADMIN")
 
                         // ADMIN y EMPLEADO: consultar y registrar movimientos
-                        .requestMatchers(HttpMethod.GET, "/api/ciudad/**", "/api/marca/**", "/api/producto/**",
-                                "/api/bodega/**", "/api/inventario/**", "/api/movimiento/**")
-                        .hasAnyRole("ADMIN", "EMPLEADO")
-                        .requestMatchers(HttpMethod.POST, "/api/movimiento").hasAnyRole("ADMIN", "EMPLEADO")
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/ciudad/**",
+                                "/api/marca/**",
+                                "/api/producto/**",
+                                "/api/bodega/**",
+                                "/api/inventario/**",
+                                "/api/movimiento/**"
+                        ).hasAnyRole("ADMIN", "EMPLEADO")
 
-                        // Todo lo demás (crear, editar y borrar catálogos e inventario): solo ADMIN
+                        .requestMatchers(HttpMethod.POST, "/api/movimiento")
+                        .hasAnyRole("ADMIN", "EMPLEADO")
+
+                        // Todo lo demás: solo ADMIN
                         .anyRequest().hasRole("ADMIN")
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -66,13 +79,22 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://127.0.0.1:5500", "http://localhost:5500"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        config.setAllowedOrigins(List.of(
+                "http://127.0.0.1:5500",
+                "http://localhost:5500"
+        ));
+
+        config.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+        ));
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
