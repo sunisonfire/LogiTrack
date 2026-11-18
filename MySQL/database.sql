@@ -245,3 +245,28 @@ CREATE TABLE auditoria (
     INDEX idx_auditoria_tipo (tipo_operacion),
     INDEX idx_auditoria_fecha (fecha_hora)
 ) ENGINE=InnoDB;
+
+-- =============================================
+-- TABLA: SOLICITUD_REGISTRO
+-- =============================================
+
+CREATE TABLE solicitud_registro (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(80) NOT NULL,
+    apellido VARCHAR(80) NOT NULL,
+    documento VARCHAR(20) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(100) NOT NULL,
+    fecha_solicitud DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('PENDIENTE', 'APROBADA', 'RECHAZADA')
+        NOT NULL DEFAULT 'PENDIENTE',
+    fecha_revision DATETIME NULL,
+    revisado_por_id BIGINT NULL,
+    motivo_rechazo VARCHAR(255) NULL,
+
+    CONSTRAINT fk_solicitud_revisor
+        FOREIGN KEY (revisado_por_id)
+        REFERENCES persona(id),
+
+    INDEX idx_solicitud_estado (estado)
+) ENGINE=InnoDB;
