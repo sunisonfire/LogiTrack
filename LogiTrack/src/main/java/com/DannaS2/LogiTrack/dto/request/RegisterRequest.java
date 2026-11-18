@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 //REVISAR PATTERN Y ASSERT TRUE
-
+//está diseñado para registrar directamente a un administrador o empleado.
 
 @Schema(description = "Datos necesarios para registrar un nuevo usuario (administrador o empleado)")
 public record RegisterRequest(

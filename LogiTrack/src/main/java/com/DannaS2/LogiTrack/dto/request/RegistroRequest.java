@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+//está diseñado exclusivamente para que una persona solicite convertirse en empleado.
+
 @Schema(description = "Datos para solicitar el registro de un nuevo empleado")
 public record RegistroRequest(
 

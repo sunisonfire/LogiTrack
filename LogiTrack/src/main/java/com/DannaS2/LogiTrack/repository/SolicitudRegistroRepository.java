@@ -15,4 +15,8 @@ public interface SolicitudRegistroRepository
     boolean existsByDocumento(String documento);
 
     boolean existsByUsername(String username);
+
+    List<SolicitudRegistro> findByEstadoOrderByFechaSolicitudAsc(
+            EstadoSolicitud estado
+    );
 }
