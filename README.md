@@ -165,7 +165,7 @@ La aplicación envía las credenciales a `POST /auth/login`. Si son válidas, re
 
 **Evidencia 1. Pantalla de inicio de sesión**
 
-![Captura de la pantalla de inicio de sesión](![alt text](image.png))
+![Captura de la pantalla de inicio de sesión](![alt text](Evidencias/image.png))
 
 
 ### 6.2. Solicitud de registro
@@ -174,7 +174,7 @@ Desde la pantalla de acceso se puede seleccionar **Solicitar registro**. El form
 
 **Evidencia 2. Formulario de solicitud de registro**
 
-![Captura del formulario de solicitud de registro](![alt text](image-2.png))
+![Captura del formulario de solicitud de registro](![alt text](Evidencias/image-2.png))
 
 ### 6.3. Resumen o dashboard
 
@@ -182,8 +182,8 @@ Después de iniciar sesión se muestra el resumen general del studio. Esta vista
 
 **Evidencia 3. Panel principal o resumen**
 
-![Captura del dashboard](![alt text](image-3.png))
-![alt text](image-4.png)
+![Captura del dashboard](![alt text](Evidencias/image-3.png))
+![alt text](Evidencias/image-4.png)
 
 ### 6.4. Productos
 
@@ -191,11 +191,11 @@ En el módulo **Productos** se consulta el catálogo. La vista permite buscar re
 
 **Evidencia 4. Catálogo de productos**
 
-![Captura del módulo de productos](![alt text](image-5.png))
+![Captura del módulo de productos](![alt text](Evidencias/image-5.png))
 
 **Evidencia 5. Formulario para crear o editar un producto**
 
-![Captura del formulario de producto](![alt text](image-6.png))
+![Captura del formulario de producto](![alt text](Evidencias/image-6.png))
 
 ### 6.5. Inventario
 
@@ -203,12 +203,12 @@ El módulo **Inventario** presenta las existencias de cada producto por bodega. 
 
 **Evidencia 6. Consulta de inventario**
 
-![Captura del módulo de inventario](![alt text](image-7.png))
-![alt text](image-9.png)
+![Captura del módulo de inventario](![alt text](Evidencias/image-7.png))
+![alt text](Evidencias/image-9.png)
 
 **Evidencia 7. Filtros de inventario y stock bajo**
 
-![Captura de filtros de inventario](![alt text](image-8.png))
+![Captura de filtros de inventario](![alt text](Evidencias/image-8.png))
 
 ### 6.6. Movimientos de inventario
 
@@ -226,15 +226,15 @@ La aplicación valida los campos básicos y envía la operación al backend, don
 
 **Evidencia 8. Listado de movimientos**
 
-![Captura del listado de movimientos](![alt text](image-10.png))
+![Captura del listado de movimientos](![alt text](Evidencias/image-10.png))
 
 **Evidencia 9. Formulario para registrar un movimiento**
 
-![Captura del formulario de movimiento](![alt text](image-11.png))
+![Captura del formulario de movimiento](![alt text](Evidencias/image-11.png))
 
 **Evidencia 10. Detalle de un movimiento**
 
-![Captura del detalle de movimiento](![alt text](image-12.png))
+![Captura del detalle de movimiento](![alt text](Evidencias/image-12.png))
 
 ### 6.7. Bodegas
 
@@ -242,9 +242,9 @@ El módulo **Bodegas** permite consultar las bodegas registradas, su ubicación,
 
 **Evidencia 11. Gestión de bodegas**
 
-![Captura del módulo de bodegas](![alt text](image-13.png))
+![Captura del módulo de bodegas](![alt text](Evidencias/image-13.png))
 
-![alt text](image-14.png)
+![alt text](Evidencias/image-14.png)
 
 ### 6.8. Marcas y ciudades
 
@@ -252,11 +252,11 @@ Los módulos **Marcas** y **Ciudades** permiten consultar los registros de catá
 
 **Evidencia 12. Gestión de marcas**
 
-![Captura del módulo de marcas](![alt text](image-15.png))
+![Captura del módulo de marcas](![alt text](Evidencias/image-15.png))
 
 **Evidencia 13. Gestión de ciudades**
 
-![Captura del módulo de ciudades](![alt text](image-16.png))
+![Captura del módulo de ciudades](![alt text](Evidencias/image-16.png))
 
 ### 6.9. Módulos administrativos
 
@@ -271,20 +271,20 @@ Cuando ingresa un usuario con rol **ADMIN**, la navegación incluye las seccione
 
 **Evidencia 14. Módulo de empleados**
 
-![Captura del módulo de empleados](![alt text](image-17.png))
-![alt text](image-18.png)
+![Captura del módulo de empleados](![alt text](Evidencias/image-17.png))
+![alt text](Evidencias/image-18.png)
 
 **Evidencia 15. Módulo de solicitudes de registro**
 
-![Captura del módulo de solicitudes](![alt text](image-19.png))
+![Captura del módulo de solicitudes](![alt text](Evidencias/image-19.png))
 
 **Evidencia 16. Módulo de auditoría**
 
-![Captura del módulo de auditoría](![alt text](image-20.png))
+![Captura del módulo de auditoría](![alt text](Evidencias/image-20.png))
 
 **Evidencia 17. Módulo de reportes**
 
-![Captura del módulo de reportes](![alt text](image-21.png))
+![Captura del módulo de reportes](![alt text](Evidencias/image-21.png))
 
 ### 6.10. Cierre de sesión
 
@@ -292,7 +292,7 @@ La opción **Cerrar sesión**, ubicada en la parte inferior del menú lateral, f
 
 **Evidencia 18. Opción de cierre de sesión o pantalla posterior**
 
-![Captura del cierre de sesión](![alt text](image-22.png))
+![Captura del cierre de sesión](![alt text](Evidencias/image-22.png))
 
 ## 7. Roles y permisos
 
