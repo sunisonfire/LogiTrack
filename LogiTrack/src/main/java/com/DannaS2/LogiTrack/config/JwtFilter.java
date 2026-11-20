@@ -43,4 +43,16 @@ public class JwtFilter extends OncePerRequestFilter {
         // Siempre continuar la cadena; si no hubo autenticación, Spring responde 401
         chain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        return path.equals("/auth/login")
+                || path.equals("/auth/register")
+                || path.equals("/swagger-ui.html")
+                || path.startsWith("/swagger-ui/")
+                || path.startsWith("/v3/api-docs/");
+    }
+
 }

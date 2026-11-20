@@ -1,96 +1,57 @@
-# LogiTrack Frontend
+# Sunnie & Moonie · LogiTrack Frontend
 
-Interfaz web estática para el backend Spring Boot de LogiTrack. Esta versión incluye inicio de sesión JWT, resumen, consulta de personas y CRUD de administradores, con diseño responsive inspirado en Sunnie & Moonie.
+Frontend estático responsive para el backend Spring Boot incluido en el proyecto.
 
-## 1. Estructura
+## Estructura
+- `index.html`
+- `css/styles.css`
+- `js/config.js` — URL del backend
+- `js/app.js` — autenticación, vistas, formularios y consumo REST
 
-```text
-frontend/
-├── index.html
-├── css/
-│   └── styles.css
-├── js/
-│   ├── config.js
-│   └── app.js
-└── README.md
-```
+## Ejecutar
+1. Inicia MySQL y el backend Spring Boot.
+2. Abre `frontend/index.html` con Live Server (puerto 5500).
+3. Inicia sesión con una cuenta existente.
+4. Para entrar desde el celular, el teléfono y el computador deben estar en la misma red Wi-Fi.
 
-## 2. Configurar la URL del backend
-
-Edita **`js/config.js`**. La variable global centralizada es:
-
+## Configuración del backend
+Edita `js/config.js`:
 ```js
 window.LOGITRACK_CONFIG = Object.freeze({
   API_BASE_URL: "http://localhost:8080",
-  REQUEST_TIMEOUT_MS: 15000
+  REQUEST_TIMEOUT_MS: 20000
 });
 ```
 
-- `API_BASE_URL`: dirección base de Spring Boot (sin `/` al final).
-- `REQUEST_TIMEOUT_MS`: tiempo máximo de espera de cada petición.
+### Acceso desde celular (LAN)
+`localhost` en el celular apunta al propio celular, no al computador. Cambia `API_BASE_URL` por la IPv4 local del computador, por ejemplo:
+`http://192.168.1.20:8080`
 
-Ejemplo si el frontend corre en `http://localhost:5500` y Spring Boot en `http://localhost:8081`:
+Abre desde el teléfono la URL de Live Server usando también la IP del computador:
+`http://192.168.1.20:5500/LogiTrack/frontend/` (ajusta la ruta según dónde abras el proyecto).
 
-```js
-API_BASE_URL: "http://localhost:8081"
-```
+El backend del ZIP limita CORS a `http://127.0.0.1:5500` y `http://localhost:5500`. Para permitir la IP/puerto real de Live Server, agrega ese origen exacto a `config.setAllowedOrigins(...)` en `SecurityConfig.java`. Si pruebas desde móvil, el origen es el host/IP y puerto que aparecen en la barra del navegador del teléfono. No uses `0.0.0.0` como URL del navegador. Además, permite los puertos 5500 y 8080 en el firewall del computador y configura Spring para escuchar en la interfaz de red (no solo loopback).
 
-No necesitas cambiar las URLs en `app.js`.
+## Funcionalidades conectadas
+- Login JWT `POST /auth/login` y solicitud de acceso `POST /auth/register`.
+- Productos: listar, consultar (a través de lista), filtrar por categoría/nombre desde UI, crear, actualizar y eliminar.
+- Marcas, ciudades, bodegas: CRUD.
+- Empleados y administradores: CRUD (solo administrador según SecurityConfig).
+- Inventario por bodega: listar, crear, actualizar y eliminar.
+- Movimientos: listar, consultar detalle, crear entrada/salida/transferencia con múltiples líneas.
+- Solicitudes pendientes: listar, aprobar con bodega asignada y rechazar con motivo.
+- Personas: consulta.
+- Auditoría: consulta y filtros visuales.
+- Reporte general: stock por bodega y productos más movidos.
 
-## 3. CORS del backend
+## Roles y permisos
+El frontend muestra opciones administrativas solo cuando el login devuelve `rol: ADMIN`. El backend sigue siendo la autoridad: según `SecurityConfig`, los endpoints de administración/personas/auditoría/solicitudes son solo ADMIN; catálogo y consultas de movimientos son accesibles a ADMIN y EMPLEADO; crear movimientos también. Las demás operaciones quedan protegidas por backend.
 
-El backend actual (`SecurityConfig.java`) permite los orígenes `http://127.0.0.1:5500` y `http://localhost:5500`. Si ejecutas el frontend en otro puerto, agrega ese origen a `config.setAllowedOrigins(...)` en el backend y reinicia Spring Boot. El puerto del backend y el del frontend pueden ser diferentes; CORS controla qué origen del navegador está autorizado.
-
-Para Live Server usa una de estas direcciones:
-- `http://127.0.0.1:5500`
-- `http://localhost:5500`
-
-Si abres el HTML con `file://`, algunos navegadores pueden bloquear las peticiones. Usa un servidor estático local.
-
-## 4. Ejecutar
-
-1. Inicia MySQL y verifica la configuración del backend.
-2. Inicia Spring Boot desde el proyecto Maven.
-3. Abre la carpeta `frontend` en Visual Studio Code.
-4. Ejecuta `index.html` con Live Server, o inicia otro servidor estático.
-5. Ajusta `API_BASE_URL` si el backend no está en `localhost:8080`.
-
-## 5. Funcionalidades y endpoints usados
-
-| Función | Método y endpoint |
-|---|---|
-| Inicio de sesión | `POST /auth/login` |
-| Listar administradores | `GET /api/administrador` |
-| Crear administrador | `POST /api/administrador` |
-| Consultar administrador | `GET /api/administrador/{id}` |
-| Actualizar administrador | `PUT /api/administrador/{id}` |
-| Eliminar administrador | `DELETE /api/administrador/{id}` |
-| Listar personas | `GET /api/persona` |
-
-El login envía `username`, `password` y `rol` (`ADMIN` o `EMPLEADO`). La respuesta JWT se conserva en `sessionStorage` y se envía como `Authorization: Bearer <token>`.
-
-El alta/edición de administrador envía el objeto anidado que espera el backend:
-
-```json
-{
-  "persona": {
-    "nombre": "Nombre",
-    "apellido": "Apellido",
-    "documento": "123456"
-  },
-  "username": "usuario",
-  "password": "ClaveSegura123"
-}
-```
-
-En una edición, si se deja la contraseña vacía, el frontend no envía el campo `password`. Confirma que el servicio del backend acepte ese comportamiento para actualizaciones; si exige contraseña, introduce una nueva.
-
-## 6. Roles
-
-La configuración de seguridad del backend reserva `/api/administrador/**` y `/api/persona/**` para `ADMIN`. La navegación oculta estas secciones a `EMPLEADO`. El control real de permisos siempre lo realiza Spring Security.
-
-## 7. Notas
-
-- El frontend no contiene credenciales de MySQL ni secretos JWT.
-- El botón **Probar conexión** verifica que el servidor responda a una petición OPTIONS; no sustituye una prueba autenticada de endpoints.
-- La API debe estar ejecutándose y CORS debe permitir el origen desde el que se sirve esta interfaz.
+## Notas importantes
+- El DTO `ProductoDtoResponse` no contiene URL de imagen ni archivo multimedia. Por eso las tarjetas muestran una composición gráfica de marca; no se inventan fotografías ni se envía una propiedad de imagen inexistente.
+- El inventario no expone un endpoint de imagen ni de carga de archivos.
+- La API de auditoría ofrece filtros adicionales; esta interfaz incluye búsqueda local y filtro por tipo sobre los registros descargados.
+- No existe endpoint de actualización/eliminación de movimientos; el frontend no presenta esas acciones.
+- Las categorías admitidas son las definidas en el enum `Categoria` del backend.
+- El registro público solicita acceso como empleado; no crea una cuenta activa. La aprobación la realiza una administradora.
+- Las operaciones pueden ser rechazadas por reglas de negocio o relaciones existentes; el frontend muestra el mensaje que devuelve el servidor.

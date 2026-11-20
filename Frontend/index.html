@@ -1,118 +1,61 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f4ee">
-  <title>LogiTrack | Gestión logística</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="js/config.js"></script>
-  <script defer src="js/app.js"></script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8e8eb"><title>Sunnie & Moonie · LogiTrack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div id="toast-region" class="toast-region" aria-live="polite"></div>
-  <main id="login-view" class="login-shell">
-    <section class="login-art">
-      <div class="brand brand-light"><span class="brand-mark">L</span><span>LogiTrack</span></div>
-      <div class="art-copy">
-        <span class="eyebrow">CONTROL • ORDEN • MOVIMIENTO</span>
-        <h1>Todo tu inventario,<br><em>en un solo lugar.</em></h1>
-        <p>Una forma más clara y tranquila de gestionar tus bodegas y operaciones.</p>
-      </div>
-      <div class="sun-moon"><span class="sun">☼</span><span class="moon">☾</span></div>
-      <div class="art-foot">SUNNIE & MOONIE EDITION</div>
-    </section>
-    <section class="login-panel">
-      <div class="login-card">
-        <div class="mobile-brand brand"><span class="brand-mark">L</span><span>LogiTrack</span></div>
-        <span class="eyebrow">BIENVENIDO DE NUEVO</span>
-        <h2>Inicia sesión</h2>
-        <p class="muted">Ingresa tus credenciales para continuar.</p>
-        <form id="login-form" class="form-stack">
-          <label>Usuario<input name="username" autocomplete="username" required placeholder="Tu nombre de usuario"></label>
-          <label>Contraseña<input name="password" type="password" autocomplete="current-password" required placeholder="Tu contraseña"></label>
-          <label>Ingresar como
-            <select name="rol" required><option value="ADMIN">Administrador</option><option value="EMPLEADO">Empleado</option></select>
-          </label>
-          <button class="btn btn-primary btn-full" type="submit">Entrar <span>→</span></button>
-          <div id="login-error" class="form-error" role="alert"></div>
-        </form>
-        <div class="connection-line"><span class="status-dot"></span><span id="connection-label">API sin comprobar</span><button id="test-api" class="text-button" type="button">Probar conexión</button></div>
-      </div>
-      <footer>LogiTrack · Gestión inteligente de inventario</footer>
-    </section>
-  </main>
-
-  <div id="app-view" class="app-shell hidden">
-    <aside class="sidebar" id="sidebar">
-      <div class="brand"><span class="brand-mark">L</span><span>LogiTrack</span></div>
-      <div class="side-caption">ESPACIO DE TRABAJO</div>
-      <nav class="side-nav">
-        <button class="nav-item active" data-page="overview"><span>◫</span>Resumen</button>
-        <button class="nav-item" data-page="administradores"><span>♙</span>Administradores</button>
-        <button class="nav-item" data-page="personas"><span>♧</span>Personas</button>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="sidebar-note"><span class="note-icon">✦</span><div><b>Un día a la vez</b><small>Tu operación, bajo control.</small></div></div>
-        <button id="logout-button" class="nav-item logout"><span>↪</span>Cerrar sesión</button>
-      </div>
-    </aside>
-    <section class="main-area">
-      <header class="topbar">
-        <button id="menu-toggle" class="icon-button mobile-only" aria-label="Abrir menú">☰</button>
-        <div><div class="top-kicker">LOGITRACK / <span id="breadcrumb">RESUMEN</span></div><div class="top-title" id="welcome-title">Resumen general</div></div>
-        <div class="user-chip"><div class="avatar" id="user-avatar">L</div><div><b id="user-name">Usuario</b><small id="user-role">ADMIN</small></div></div>
-      </header>
-      <div class="content-wrap">
-        <section id="page-overview" class="page">
-          <div class="hero-card">
-            <div><span class="eyebrow">PANEL DE CONTROL</span><h1>Hola, <span id="hello-name">bienvenido</span> <span class="wave">✦</span></h1><p>Este es el estado de tu espacio de trabajo.</p></div>
-            <div class="hero-orbit"><span>☼</span><i>☾</i></div>
-          </div>
-          <div class="section-heading"><div><span class="eyebrow">VISTA RÁPIDA</span><h2>Tu operación</h2></div><span class="soft-pill">Datos en tiempo real</span></div>
-          <div class="stats-grid">
-            <article class="stat-card"><div class="stat-icon lilac">♙</div><span>Administradores</span><strong id="stat-admins">—</strong><small>Registros del sistema</small></article>
-            <article class="stat-card"><div class="stat-icon peach">♧</div><span>Personas</span><strong id="stat-people">—</strong><small>Personas registradas</small></article>
-            <article class="stat-card"><div class="stat-icon mint">⌁</div><span>Conexión API</span><strong id="stat-api">—</strong><small id="stat-api-detail">Estado del servidor</small></article>
-          </div>
-          <div class="info-panel"><div class="panel-icon">✧</div><div><b>Un espacio para trabajar mejor</b><p>Usa el menú lateral para consultar administradores y personas. Las acciones disponibles dependen de tu rol.</p></div></div>
-        </section>
-
-        <section id="page-administradores" class="page hidden">
-          <div class="section-heading page-heading"><div><span class="eyebrow">GESTIÓN DE ACCESOS</span><h2>Administradores</h2><p class="muted">Administra las cuentas con permisos de administración.</p></div><button id="new-admin" class="btn btn-primary">＋ Nuevo administrador</button></div>
-          <div class="table-card"><div class="table-toolbar"><div class="search-box">⌕ <input id="admin-search" placeholder="Buscar por nombre, documento o usuario..."></div><button id="refresh-admins" class="btn btn-quiet">↻ Actualizar</button></div><div class="table-scroll"><table><thead><tr><th>PERSONA</th><th>DOCUMENTO</th><th>USUARIO</th><th>ID</th><th>ACCIONES</th></tr></thead><tbody id="admins-body"><tr><td colspan="5" class="empty-cell">Cargando administradores...</td></tr></tbody></table></div></div>
-        </section>
-
-        <section id="page-personas" class="page hidden">
-          <div class="section-heading page-heading"><div><span class="eyebrow">DIRECTORIO</span><h2>Personas</h2><p class="muted">Consulta administradores y empleados registrados.</p></div><button id="refresh-people" class="btn btn-quiet">↻ Actualizar</button></div>
-          <div class="table-card"><div class="table-toolbar"><div class="search-box">⌕ <input id="people-search" placeholder="Buscar por nombre o documento..."></div><span class="soft-pill">Solo consulta</span></div><div class="table-scroll"><table><thead><tr><th>NOMBRE COMPLETO</th><th>DOCUMENTO</th><th>TIPO</th><th>ID</th></tr></thead><tbody id="people-body"><tr><td colspan="4" class="empty-cell">Cargando personas...</td></tr></tbody></table></div></div>
-        </section>
-      </div>
-      <footer class="main-footer">Hecho para mantener todo en equilibrio <span>✦</span></footer>
-    </section>
-  </div>
-
-  <dialog id="admin-dialog" class="modal">
-    <form id="admin-form" method="dialog">
-      <div class="modal-head"><div><span class="eyebrow">CUENTA DE ACCESO</span><h2 id="admin-dialog-title">Nuevo administrador</h2></div><button type="button" class="icon-button" id="close-admin-dialog" aria-label="Cerrar">×</button></div>
-      <input type="hidden" name="id">
-      <div class="form-grid">
-        <label>Nombre<input name="nombre" maxlength="80" required></label>
-        <label>Apellido<input name="apellido" maxlength="80" required></label>
-        <label class="full-field">Documento<input name="documento" maxlength="20" required></label>
-        <label>Nombre de usuario<input name="username" maxlength="50" required></label>
-        <label>Contraseña<input name="password" type="password" minlength="8" maxlength="100" placeholder="Mínimo 8 caracteres"></label>
-      </div>
-      <p class="form-hint" id="password-hint">La contraseña es obligatoria para crear una cuenta.</p>
-      <div class="modal-actions"><button type="button" class="btn btn-quiet" id="cancel-admin">Cancelar</button><button type="submit" class="btn btn-primary" id="save-admin">Guardar administrador</button></div>
-      <div id="admin-form-error" class="form-error" role="alert"></div>
+<div id="toast-region" aria-live="polite"></div>
+<section id="auth-screen" class="auth-shell">
+ <div class="auth-art"><div class="auth-brand"><span class="brand-orbit">s</span><span>sun<em>nie</em> & moon<em>ie</em></span></div>
+  <div class="auth-copy"><span class="eyebrow">THE BEAUTY STOCKROOM</span><h1>Every shade<br>has its <i>place.</i></h1><p>El backstage donde la belleza encuentra su orden.</p></div>
+  <div class="auth-still"><div class="still-card still-one">S&amp;M <small>beauty essentials</small></div><div class="still-card still-two"><span>✳</span></div><div class="still-card still-three">GLOW<br>STUDIO</div></div>
+  <div class="auth-foot">LOGITRACK · INVENTORY STUDIO</div>
+ </div>
+ <div class="auth-panel">
+  <div class="auth-panel-inner">
+   <div class="mobile-brand">Sunnie & Moonie <span>· LogiTrack</span></div>
+   <div id="login-view">
+    <span class="eyebrow">WELCOME BACK</span><h2>Qué gusto<br>tenerte <i>de vuelta.</i></h2><p class="muted">Ingresa al espacio de trabajo.</p>
+    <form id="login-form" class="form-stack">
+     <label>Nombre de usuario<input name="username" autocomplete="username" placeholder="tu.usuario" required></label>
+     <label>Contraseña<input name="password" type="password" autocomplete="current-password" placeholder="••••••••" required></label>
+     <label>Ingresar como<select name="rol"><option value="ADMIN">Administradora</option><option value="EMPLEADO">Colaboradora</option></select></label>
+     <button class="btn btn-primary full">Entrar al estudio <span>↗</span></button>
     </form>
-  </dialog>
-  <dialog id="confirm-dialog" class="modal confirm-modal">
-    <form method="dialog"><div class="modal-head"><div><span class="eyebrow">CONFIRMACIÓN</span><h2>¿Eliminar administrador?</h2></div></div><p class="muted">Esta acción no se puede deshacer. Si el registro tiene relaciones, el backend puede impedir su eliminación.</p><div class="modal-actions"><button class="btn btn-quiet" value="cancel">Cancelar</button><button id="confirm-delete" class="btn btn-danger" value="confirm">Eliminar</button></div></form>
-  </dialog>
-</body>
-</html>
+    <p class="auth-switch">¿Aún no tienes acceso? <button class="text-button" id="show-register">Solicitar registro</button></p>
+   </div>
+   <div id="register-view" class="hidden">
+    <button class="back-link" id="back-login">← Volver al inicio</button><span class="eyebrow">JOIN THE TEAM</span><h2>Tu lugar en<br>el <i>studio.</i></h2><p class="muted">Envía tu solicitud. Una administradora revisará tus datos.</p>
+    <form id="register-form" class="form-stack">
+     <div class="two-fields"><label>Nombre<input name="nombre" required maxlength="80"></label><label>Apellido<input name="apellido" required maxlength="80"></label></div>
+     <label>Documento<input name="documento" required maxlength="20"></label>
+     <label>Nombre de usuario<input name="username" required minlength="3" maxlength="50"></label>
+     <label>Contraseña<input name="password" type="password" required minlength="8" maxlength="72"></label>
+     <button class="btn btn-primary full">Enviar solicitud <span>↗</span></button>
+    </form>
+   </div>
+  </div>
+ </div>
+</section>
+<div id="app" class="app-shell hidden">
+ <aside class="sidebar" id="sidebar">
+  <div class="side-brand"><span class="brand-orbit">s</span><div>Sunnie & Moonie<small>LOGITRACK STUDIO</small></div></div>
+  <div class="side-label">WORKSPACE</div><nav id="main-nav"></nav>
+  <div class="side-bottom"><div class="side-note"><span>✳</span><div>Beauty in every detail<small>Stock with a little soul.</small></div></div>
+   <button class="profile-mini" id="profile-button"><span class="avatar" id="avatar-initial">S</span><span><b id="profile-name">Studio user</b><small id="profile-role">TEAM MEMBER</small></span><span class="dots">···</span></button>
+   <button class="logout-link" id="logout">↗ Cerrar sesión</button>
+  </div>
+ </aside>
+ <main class="main-area">
+  <header class="topbar"><button class="mobile-menu" id="mobile-menu" aria-label="Abrir menú">☰</button><div class="crumb" id="crumb">Workspace / Overview</div><div class="top-actions"><span class="today" id="today-label"></span><span class="top-avatar" id="top-avatar">S</span></div></header>
+  <div id="page-content" class="page-content"></div>
+ </main>
+ <nav class="mobile-nav" id="mobile-nav"></nav>
+</div>
+<div id="modal-root"></div>
+<script src="js/config.js"></script><script src="js/app.js"></script>
+</body></html>
