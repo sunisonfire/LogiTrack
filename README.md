@@ -1,6 +1,6 @@
-# LogiTrack – Sistema de Gestión y Auditoría de Bodegas
+# Sunnie & Moonie · LogiTrack Frontend
 
-## 1. Descripción del proyecto
+## Descripción del proyecto
 
 **LogiTrack** es un sistema backend desarrollado para LogiTrack S.A., una empresa que administra bodegas ubicadas en diferentes ciudades.
 
@@ -12,7 +12,7 @@ El proyecto busca centralizar la información, mejorar el control de inventarios
 
 Desarrollar un sistema de gestión y auditoría de bodegas que permita registrar transacciones de inventario y generar reportes auditables de los cambios realizados por cada usuario.
 
-## 2. Tecnologías utilizadas
+## Tecnologías utilizadas
 
 - **Java 21:** lenguaje de programación.
 - **Spring Boot 4.1.2:** framework para el desarrollo del backend.
@@ -24,7 +24,7 @@ Desarrollar un sistema de gestión y auditoría de bodegas que permita registrar
 - **Swagger / OpenAPI 3:** documentación y pruebas de endpoints.
 - **Lombok:** reducción de código repetitivo.
 
-## 3. Funcionalidades principales
+## Funcionalidades principales
 
 - Gestión de bodegas: registro, consulta, actualización y eliminación.
 - Gestión de productos: operaciones CRUD.
@@ -39,32 +39,37 @@ Desarrollar un sistema de gestión y auditoría de bodegas que permita registrar
 - Reporte general de inventario y productos más movidos.
 - Manejo global de excepciones y validaciones.
 
-## 4. Estructura del proyecto
+## 1. Repositorios del proyecto
 
-La organización principal del backend es la siguiente:
+- **Frontend:** https://github.com/sunisonfire/LogiTrack-Frontend
+- **Backend:** https://github.com/sunisonfire/LogiTrack
+
+El frontend no incluye la base de datos ni el backend. Para utilizar todas sus funciones, Spring Boot y MySQL deben estar configurados y ejecutándose.
+
+## 2. Estructura del proyecto
 
 ```text
 LogiTrack/
 │
-├── src/
+├── LogiTrack/src/
 │   ├── main/
-│   │   ├── java/com/DannaS2/LogiTrack/
-│   │   │   ├── config/
-│   │   │   ├── controller/
-│   │   │   ├── dto/
-│   │   │   ├── exception/
-│   │   │   ├── mapper/
-│   │   │   ├── model/
-│   │   │   ├── repository/
-│   │   │   ├── security/
-│   │   │   ├── service/
-│   │   │   └── LogiTrackApplication.java
-│   │   │
-│   │   └── resources/
-│   │       └── application.properties
-│   │
-│   └── test/
-│       └── java/com/DannaS2/LogiTrack/
+│          │   ├── java/com/DannaS2/LogiTrack/
+│          │   │   ├── config/
+│          │   │   ├── controller/
+|          │   │   ├── dto/
+|          │   │   ├── exception/
+│          │   │   ├── mapper/
+│          │   │   ├── model/
+│          │   │   ├── repository/
+│          │   │   ├── security/
+│          │   │   ├── service/
+│          │   │   └── LogiTrackApplication.java
+│          │   │
+│          │   └── resources/
+│          │       └── application.properties
+│          │
+│          └── test/
+│              └── java/com/DannaS2/LogiTrack/
 │
 ├── MySQL/
 │   ├── database.sql
@@ -85,313 +90,278 @@ LogiTrack/
 └── README.md
 ```
 
-## 5. Requisitos para la instalación
+- `index.html`: estructura de las vistas de acceso y aplicación.
+- `css/styles.css`: estilos y diseño responsive.
+- `js/config.js`: dirección base de la API y tiempo máximo de espera.
+- `js/app.js`: autenticación, navegación, formularios y consumo de endpoints REST.
+- `Evidencias/`: carpeta destinada a las capturas de funcionamiento del frontend.
 
-Antes de ejecutar el proyecto, es necesario contar con:
+## 3. Requisitos previos
 
-- Java JDK 21.
-- Maven.
-- MySQL Server.
-- Un IDE como IntelliJ IDEA, Eclipse o Visual Studio Code.
-- Git para clonar el repositorio.
+- Navegador web actualizado.
+- Python 3 o Visual Studio Code con la extensión Live Server.
+- Backend LogiTrack ejecutándose.
+- MySQL configurado y en ejecución para el backend.
+- Conectividad de red entre el navegador y el servidor backend.
+- Internet para cargar las fuentes tipográficas externas.
 
-## 6. Instalación y configuración
+## 4. Configuración de la conexión con el backend
 
-### 6.1. Clonar el repositorio
+Antes de abrir la aplicación, editar el archivo `js/config.js` y configurar `API_BASE_URL` con la dirección donde está ejecutándose Spring Boot:
 
-Abrir una terminal y ejecutar:
+```javascript
+window.LOGITRACK_CONFIG = Object.freeze({
+    API_BASE_URL: "http://localhost:8080",
+    REQUEST_TIMEOUT_MS: 20000
+});
+```
+
+Si el backend se ejecuta en otro computador, utilizar la dirección IPv4 de ese equipo:
+
+```javascript
+window.LOGITRACK_CONFIG = Object.freeze({
+    API_BASE_URL: "http://IP_DEL_SERVIDOR:8080",
+    REQUEST_TIMEOUT_MS: 20000
+});
+```
+
+Por ejemplo: `http://192.168.200.214:8080`. Reemplazar la dirección de ejemplo por la IP real del equipo que ejecuta Spring Boot.
+
+**Importante:** `localhost` apunta al mismo dispositivo desde el que se abre el navegador. Si el backend está en otro equipo o se accede desde un celular, se debe utilizar la IP o el dominio del servidor backend.
+
+## 5. Ejecución del frontend
+
+### Opción A. Servidor local con Python
+
+1. Abrir una terminal dentro de la carpeta del frontend.
+2. Ejecutar:
 
 ```bash
-git clone https://github.com/sunisonfire/LogiTrack.git
+python -m http.server 8000
 ```
 
-Ingresar a la carpeta del proyecto:
-
-```bash
-cd LogiTrack/LogiTrack
-```
-
-### 6.2. Configurar la base de datos
-
-1. Iniciar el servidor MySQL.
-2. Crear la base de datos que utiliza el proyecto.
-3. Ejecutar los scripts SQL disponibles en la carpeta `MySQL/`, según corresponda.
-4. Abrir el archivo `src/main/resources/application.properties`.
-5. Configurar las credenciales y la conexión a MySQL.
-
-Ejemplo de configuración:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/NOMBRE_BASE_DATOS
-spring.datasource.username=TU_USUARIO
-spring.datasource.password=TU_CONTRASEÑA
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-```
-
-**Nota:** adaptar los valores del ejemplo a la configuración real del entorno. No publicar contraseñas ni claves JWT privadas en el repositorio.
-
-### 6.3. Instalar dependencias
-
-Desde la carpeta donde se encuentra el archivo `pom.xml`, ejecutar:
-
-```bash
-mvn clean install
-```
-
-### 6.4. Ejecutar el proyecto
-
-Ejecutar:
-
-```bash
-mvn spring-boot:run
-```
-
-También es posible iniciar la aplicación desde el IDE ejecutando la clase principal `LogiTrackApplication`.
-
-Una vez iniciada, la API estará disponible localmente en:
+3. Mantener la terminal abierta.
+4. Abrir en el navegador:
 
 ```text
-http://localhost:8080
+http://localhost:8000
 ```
 
-## 7. Documentación Swagger
+### Opción B. Visual Studio Code
 
-El proyecto utiliza Swagger/OpenAPI 3 para documentar y probar los endpoints REST.
+1. Abrir la carpeta del frontend en Visual Studio Code.
+2. Instalar la extensión **Live Server**, si aún no está instalada.
+3. Abrir `index.html`.
+4. Seleccionar **Open with Live Server**.
+5. Abrir la dirección local que indique la extensión.
 
-Con la aplicación en ejecución, ingresar a:
+## 6. Uso de la aplicación
 
-**Interfaz Swagger:**
+### 6.1. Pantalla de inicio de sesión
 
-http://localhost:8080/swagger-ui/index.html
+Al abrir el frontend se presenta la pantalla de acceso de Sunnie & Moonie · LogiTrack. Para ingresar, escribir el nombre de usuario, la contraseña y seleccionar el rol correspondiente (**Administradora** o **Colaboradora**). Después, seleccionar **Entrar al estudio**.
 
-**Especificación OpenAPI:**
+La aplicación envía las credenciales a `POST /auth/login`. Si son válidas, recibe el JWT y lo utiliza en las siguientes peticiones protegidas.
 
-http://localhost:8080/v3/api-docs
+**Evidencia 1. Pantalla de inicio de sesión**
 
-### Evidencias de Swagger (EndPoints Documentados)
+![Captura de la pantalla de inicio de sesión](![alt text](image.png))
 
-![Documentación general de Swagger](Evidencias/Swagger/1.png)
-![Documentación general de Swagger](Evidencias/Swagger/2.png)
-![Documentación general de Swagger](Evidencias/Swagger/3.png)
-![Documentación general de Swagger](Evidencias/Swagger/4.png)
-![Documentación general de Swagger](Evidencias/Swagger/5.png)
-![Documentación general de Swagger](Evidencias/Swagger/1.png)
+### 6.2. Solicitud de registro
 
+Desde la pantalla de acceso se puede seleccionar **Solicitar registro**. El formulario solicita nombre, apellido, documento, nombre de usuario y contraseña. Al enviarlo, se crea una solicitud para revisión administrativa; no se habilita automáticamente el acceso al sistema.
 
+**Evidencia 2. Formulario de solicitud de registro**
 
-## 8. Ejemplos de endpoints REST
+![Captura del formulario de solicitud de registro](Evidencias/frontend-02-solicitud-registro.png)
 
-Los siguientes endpoints permiten interactuar con las funcionalidades principales del sistema.
+### 6.3. Resumen o dashboard
 
-### 8.1. Autenticación
+Después de iniciar sesión se muestra el resumen general del studio. Esta vista presenta indicadores del catálogo, unidades en stock, bodegas activas y registros con existencias bajas. También muestra el stock distribuido por bodega, los últimos movimientos y accesos rápidos a módulos principales.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| POST | `/auth/login` | Iniciar sesión y obtener JWT. |
-| POST | `/auth/register` | Solicitar registro de empleado. |
+**Evidencia 3. Panel principal o resumen**
 
-Ejemplo de inicio de sesión:
+![Captura del dashboard](Evidencias/frontend-03-dashboard.png)
 
-```json
-{
-  "username": "juan.perez",
-  "password": "Clave12345",
-  "rol": "EMPLEADO"
-}
+### 6.4. Productos
+
+En el módulo **Productos** se consulta el catálogo. La vista permite buscar registros y filtrar por categoría o marca. Los productos se presentan en tarjetas o en vista de lista. Cuando el rol y los permisos lo permiten, se pueden crear, editar y eliminar registros.
+
+**Evidencia 4. Catálogo de productos**
+
+![Captura del módulo de productos](Evidencias/frontend-04-productos.png)
+
+**Evidencia 5. Formulario para crear o editar un producto**
+
+![Captura del formulario de producto](Evidencias/frontend-05-formulario-producto.png)
+
+### 6.5. Inventario
+
+El módulo **Inventario** presenta las existencias de cada producto por bodega. Incluye búsqueda y filtros por bodega y por stock bajo (cinco unidades o menos, según el filtro visual del frontend).
+
+**Evidencia 6. Consulta de inventario**
+
+![Captura del módulo de inventario](Evidencias/frontend-06-inventario.png)
+
+**Evidencia 7. Filtros de inventario y stock bajo**
+
+![Captura de filtros de inventario](Evidencias/frontend-07-filtros-inventario.png)
+
+### 6.6. Movimientos de inventario
+
+En **Movimientos** se consultan las entradas, salidas y transferencias registradas. La tabla presenta fecha, tipo, bodega de origen, bodega de destino, productos, cantidades y persona responsable.
+
+Para registrar un movimiento:
+
+1. Seleccionar **Registrar movimiento**.
+2. Elegir el tipo: `ENTRADA`, `SALIDA` o `TRANSFERENCIA`.
+3. Seleccionar la bodega de origen o destino según el tipo.
+4. Agregar uno o varios productos y sus cantidades.
+5. Guardar el formulario.
+
+La aplicación valida los campos básicos y envía la operación al backend, donde se aplican las reglas de negocio y se registra el responsable autenticado.
+
+**Evidencia 8. Listado de movimientos**
+
+![Captura del listado de movimientos](Evidencias/frontend-08-movimientos.png)
+
+**Evidencia 9. Formulario para registrar un movimiento**
+
+![Captura del formulario de movimiento](Evidencias/frontend-09-formulario-movimiento.png)
+
+**Evidencia 10. Detalle de un movimiento**
+
+![Captura del detalle de movimiento](Evidencias/frontend-10-detalle-movimiento.png)
+
+### 6.7. Bodegas
+
+El módulo **Bodegas** permite consultar las bodegas registradas, su ubicación, ciudad, capacidad y encargada. Según el rol y los permisos, también permite crear, editar y eliminar registros.
+
+**Evidencia 11. Gestión de bodegas**
+
+![Captura del módulo de bodegas](Evidencias/frontend-11-bodegas.png)
+
+### 6.8. Marcas y ciudades
+
+Los módulos **Marcas** y **Ciudades** permiten consultar los registros de catálogo utilizados por los productos y las bodegas. Las acciones de administración están sujetas al rol y a la autorización del backend.
+
+**Evidencia 12. Gestión de marcas**
+
+![Captura del módulo de marcas](Evidencias/frontend-12-marcas.png)
+
+**Evidencia 13. Gestión de ciudades**
+
+![Captura del módulo de ciudades](Evidencias/frontend-13-ciudades.png)
+
+### 6.9. Módulos administrativos
+
+Cuando ingresa un usuario con rol **ADMIN**, la navegación incluye las secciones de equipo y control:
+
+- **Empleados:** consulta y administración de empleados y su bodega asignada.
+- **Administradores:** consulta y administración de perfiles administradores.
+- **Solicitudes:** revisión de solicitudes de registro, aprobación con asignación de bodega o rechazo con motivo.
+- **Personas:** consulta de personas registradas.
+- **Auditoría:** consulta de operaciones registradas y visualización de valores anteriores y nuevos.
+- **Reportes:** resumen de stock por bodega y productos más movidos.
+
+**Evidencia 14. Módulo de empleados**
+
+![Captura del módulo de empleados](Evidencias/frontend-14-empleados.png)
+
+**Evidencia 15. Módulo de solicitudes de registro**
+
+![Captura del módulo de solicitudes](Evidencias/frontend-15-solicitudes.png)
+
+**Evidencia 16. Módulo de auditoría**
+
+![Captura del módulo de auditoría](Evidencias/frontend-16-auditoria.png)
+
+**Evidencia 17. Módulo de reportes**
+
+![Captura del módulo de reportes](Evidencias/frontend-17-reportes.png)
+
+### 6.10. Cierre de sesión
+
+La opción **Cerrar sesión**, ubicada en la parte inferior del menú lateral, finaliza la sesión en el frontend, elimina el token almacenado en el navegador y vuelve a la pantalla de acceso.
+
+**Evidencia 18. Opción de cierre de sesión o pantalla posterior**
+
+![Captura del cierre de sesión](Evidencias/frontend-18-cerrar-sesion.png)
+
+## 7. Roles y permisos
+
+La navegación se adapta al rol recibido durante el inicio de sesión.
+
+**ADMIN**
+- Acceso a módulos de catálogo, bodegas, productos, inventario y movimientos.
+- Acceso a gestión de empleados y administradores.
+- Consulta de solicitudes, personas, auditoría y reportes.
+- Acciones administrativas habilitadas según los permisos del backend.
+
+**EMPLEADO**
+- Acceso a módulos operativos habilitados para su rol.
+- Consulta de productos, inventario, bodegas, marcas y ciudades.
+- Consulta y registro de movimientos, según autorización del backend.
+
+La interfaz oculta opciones que no corresponden al rol. Sin embargo, la protección efectiva se aplica en el backend mediante Spring Security y JWT; ocultar un botón no reemplaza la autorización del servidor.
+
+## 8. Conexión desde otros dispositivos en una red local
+
+Para abrir el frontend desde un celular u otro computador conectado a la misma red Wi-Fi:
+
+1. Identificar la IPv4 del equipo que sirve el frontend mediante `ipconfig`.
+2. Iniciar el servidor Python en el puerto 8000.
+3. Abrir desde el otro dispositivo `http://IP_DEL_FRONTEND:8000`.
+4. Configurar `API_BASE_URL` en `js/config.js` con la IP del equipo que ejecuta Spring Boot.
+5. Autorizar el origen del frontend en la configuración CORS del backend.
+6. Verificar que el firewall permita las conexiones requeridas en los puertos utilizados.
+
+Para que Python acepte conexiones desde la red local, se puede ejecutar:
+
+```bash
+python -m http.server 8000 --bind 0.0.0.0
 ```
 
-La autenticación exitosa devuelve un token JWT que debe utilizarse para acceder a las rutas protegidas.
+En el backend, Spring Boot debe escuchar en la interfaz de red correspondiente. Si se requiere acceso desde otros equipos, revisar `server.address` y `server.port` en `application.properties`.
 
-### 8.2. Bodegas
+El origen permitido en CORS debe coincidir exactamente con el protocolo, la IP o dominio y el puerto desde donde se abre el frontend. Después de cambiar la configuración del backend, reiniciar Spring Boot.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| POST | `/api/bodega` | Registrar una bodega. |
-| GET | `/api/bodega` | Listar bodegas. |
-| GET | `/api/bodega/{id}` | Consultar una bodega. |
-| PUT | `/api/bodega/{id}` | Actualizar una bodega. |
-| DELETE | `/api/bodega/{id}` | Eliminar una bodega. |
+## 9. Autenticación y comunicación con la API
 
-### 8.3. Productos
+- El inicio de sesión se realiza mediante `POST /auth/login`.
+- El registro público se realiza mediante `POST /auth/register`.
+- El token JWT recibido tras el login se conserva en el almacenamiento local del navegador para mantener la sesión.
+- Las peticiones protegidas agregan el encabezado `Authorization: Bearer <token>`.
+- El intercambio de datos con la API se realiza en formato JSON.
+- Si el servidor responde con error, la interfaz muestra un mensaje para informar al usuario.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| POST | `/api/producto` | Registrar un producto. |
-| GET | `/api/producto` | Listar productos. |
-| GET | `/api/producto/{id}` | Consultar producto por ID. |
-| PUT | `/api/producto/{id}` | Actualizar producto. |
-| DELETE | `/api/producto/{id}` | Eliminar producto. |
-| GET | `/api/producto/filtroCategoria` | Filtrar por categoría. |
-| GET | `/api/producto/filtroNombre` | Buscar por nombre. |
+## 10. Consideraciones y alcance
 
-### 8.4. Inventario
+- El stock se consulta desde los registros de inventario por bodega; no se trata como un atributo independiente del producto.
+- El resumen visual del dashboard considera como stock por revisar los registros con cinco unidades o menos.
+- El filtro visual del inventario utiliza el mismo umbral: cinco unidades o menos.
+- El registro público crea una solicitud de acceso que requiere revisión administrativa.
+- Los movimientos se registran mediante el backend y no presentan acciones de edición o eliminación en la interfaz.
+- Las opciones que aparecen en el frontend no sustituyen las validaciones, reglas de negocio ni controles de acceso del backend.
+- El frontend no contiene credenciales de base de datos ni debe almacenar secretos del servidor.
+- Si el backend o frontend cambia de IP o puerto, se deben actualizar las configuraciones correspondientes.
 
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/inventario/stockBajo?limite=10` | Consultar productos con stock bajo. |
+## 11. Solución de problemas
 
-### 8.5. Movimientos
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/movimiento/filtroFechas?desde=FECHA&hasta=FECHA` | Consultar movimientos por rango de fechas. |
-
-Los tipos de movimiento contemplados son:
-
-- ENTRADA.
-- SALIDA.
-- TRANSFERENCIA.
-
-### 8.6. Auditoría
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/auditoria` | Consultar registros de auditoría. |
-| GET | `/api/auditoria/{id}` | Consultar una auditoría específica. |
-| GET | `/api/auditoria/filtroPersona` | Filtrar auditorías por usuario. |
-| GET | `/api/auditoria/filtroTipo` | Filtrar por tipo de operación. |
-| GET | `/api/auditoria/filtroEntidad` | Filtrar por entidad afectada. |
-| GET | `/api/auditoria/filtroFechas` | Filtrar por fechas. |
-
-### 8.7. Reportes
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| GET | `/api/reportes/resumen` | Obtener el resumen general del inventario. |
-
-El reporte contiene el stock total por bodega y los productos con mayor cantidad de unidades movilizadas.
-
-**Nota:** consultar Swagger para verificar los parámetros requeridos y los permisos de cada endpoint.
-
-## 9. Seguridad y autenticación
-
-LogiTrack utiliza Spring Security y JWT para proteger los endpoints.
-
-El sistema contempla dos roles:
-
-- **ADMIN:** acceso a las operaciones administrativas autorizadas.
-- **EMPLEADO:** acceso a las operaciones permitidas para empleados.
-
-Para consumir los endpoints protegidos:
-
-1. Iniciar sesión mediante `/auth/login`.
-2. Obtener el token JWT.
-3. Pulsar el botón **Authorize** en Swagger.
-4. Introducir el token según el formato solicitado por Swagger.
-5. Ejecutar las operaciones autorizadas para el usuario.
-
-### Evidencias de autenticación
-
-![Json de inicio de sesion exitoso](Evidencias/Autenticacion/Autenticacion_registro_json)
-
-![Autorización con JWT](Evidencias/Autenticacion/Autenticacion_registro_exitoso)
-
-![Json con errores](Evidencias/Autenticacion/Autenticacion_registro_eror401)
-
-![Acceso sin token](Evidencias/Autenticacion/Autenticacion_registro_fallo)
-
-
-
-## 10. Capturas de pruebas funcionales
-
-En esta sección se documentan las pruebas manuales realizadas mediante Swagger, incluyendo operaciones exitosas y respuestas de error.
-
-### 10.1. Pruebas de bodegas
-
-![Registro de bodega](Evidencias/Bodegas/crear-bodega.png)
-
-![Consulta de bodegas](Evidencias/Bodegas/listar-bodegas.png)
-
-![Actualización de bodega](Evidencias/Bodegas/actualizar-bodega.png)
-
-![Protección de eliminación de bodega](Evidencias/Bodegas/eliminar-bodega-409.png)
-
-### 10.2. Pruebas de productos
-
-![Registro de producto](Evidencias/Productos/crear-producto.png)
-
-![Consulta de productos](Evidencias/Productos/listar-productos.png)
-
-![Validación de producto](Evidencias/Productos/validacion-producto.png)
-
-### 10.3. Pruebas de inventario
-
-![Consulta de stock bajo](Evidencias/Inventario/stock-bajo.png)
-
-### 10.4. Pruebas de movimientos
-
-![Registro de entrada](Evidencias/Movimientos/entrada.png)
-
-![Registro de salida](Evidencias/Movimientos/salida.png)
-
-![Transferencia entre bodegas](Evidencias/Movimientos/transferencia.png)
-
-![Validación de stock insuficiente](Evidencias/Movimientos/stock-insuficiente.png)
-
-### 10.5. Pruebas de auditoría
-
-![Consulta de auditorías](Evidencias/Auditoria/listar-auditorias.png)
-
-![Filtro de auditorías](Evidencias/Auditoria/filtro-auditoria.png)
-
-### 10.6. Pruebas de reportes
-
-![Reporte general](Evidencias/Reportes/reporte-general.png)
-
-### 10.7. Pruebas de errores y validaciones
-
-![Error 400 - Validación](Evidencias/Pruebas/error-400.png)
-
-![Error 401 - No autenticado](Evidencias/Pruebas/error-401.png)
-
-![Error 403 - Sin permisos](Evidencias/Pruebas/error-403.png)
-
-![Error 404 - Recurso no encontrado](Evidencias/Pruebas/error-404.png)
-
-![Error 409 - Conflicto](Evidencias/Pruebas/error-409.png)
-
-## 11. Manejo de excepciones y validaciones
-
-El proyecto implementa un manejo global de excepciones mediante `@ControllerAdvice`.
-
-Se contemplan respuestas personalizadas para situaciones como:
-
-- 400 – Bad Request: datos inválidos o reglas de negocio incumplidas.
-- 401 – Unauthorized: autenticación requerida o credenciales incorrectas.
-- 403 – Forbidden: usuario autenticado sin permisos suficientes.
-- 404 – Not Found: recurso no encontrado.
-- 409 – Conflict: recurso duplicado o relacionado con otros registros.
-- 500 – Internal Server Error: error interno inesperado.
-
-También se utilizan anotaciones de validación como `@NotNull`, `@NotBlank`, `@Size` y `@Positive`.
-
-## 12. Estado de las pruebas
-
-Las pruebas funcionales se realizan manualmente mediante Swagger, verificando las respuestas HTTP y el comportamiento de los endpoints.
-
-| Área | Estado |
+| Problema | Revisión recomendada |
 |---|---|
-| Autenticación y seguridad | Por documentar |
-| Gestión de bodegas | Por documentar |
-| Gestión de productos | Por documentar |
-| Inventario | Por documentar |
-| Movimientos | Por documentar |
-| Auditoría | Por documentar |
-| Reportes | Por documentar |
-| Validaciones y excepciones | Por documentar |
+| No se puede iniciar sesión | Comprobar que el backend esté activo, que `API_BASE_URL` sea correcta y que las credenciales y el rol sean válidos. |
+| Error de conexión o `Failed to fetch` | Verificar la dirección del backend, el puerto, la conectividad y el firewall. |
+| Error CORS | Autorizar en el backend el origen exacto desde donde se sirve el frontend. |
+| Respuesta `401` | Volver a iniciar sesión y comprobar que el token se envíe en el encabezado Authorization. |
+| Respuesta `403` | Verificar que el usuario tenga el rol requerido para la operación. |
+| Respuesta `404` | Comprobar que la ruta solicitada exista en el backend. |
+| No se puede acceder desde el celular | Confirmar que ambos dispositivos estén en la misma red y abrir la IP del equipo que sirve el frontend, no `localhost`. |
+| No se reflejan los cambios | Recargar la página y comprobar que se esté utilizando la versión más reciente de los archivos. |
 
-Los estados se actualizarán conforme se ejecuten y documenten las pruebas.
-
-## 13. Repositorio
-
-Código fuente del proyecto:
-
-[GitHub – LogiTrack](https://github.com/sunisonfire/LogiTrack)
+**Nota sobre GitHub Pages:** si el frontend se publica mediante HTTPS, el backend también debe estar disponible mediante HTTPS para evitar errores de contenido mixto del navegador. Una API local HTTP no puede ser consumida directamente desde una página HTTPS publicada.
 
 ---
 
-**LogiTrack S.A. – Sistema de Gestión y Auditoría de Bodegas**
-
-Proyecto académico desarrollado con Java y Spring Boot.
+**Sunnie & Moonie · LogiTrack**  
+*Beauty in every detail. Stock with a little soul.*
