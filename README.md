@@ -1,4 +1,4 @@
-# Sunnie & Moonie · LogiTrack Frontend
+# LogiTrack - Manejo de bodegas
 
 ## Descripción del proyecto
 
