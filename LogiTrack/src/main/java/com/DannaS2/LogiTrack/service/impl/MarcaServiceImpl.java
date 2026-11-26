@@ -10,6 +10,8 @@ import com.DannaS2.LogiTrack.repository.MarcaRepository;
 import com.DannaS2.LogiTrack.service.MarcaService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.DannaS2.LogiTrack.model.TipoOperacion;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 
 import java.util.List;
 
@@ -18,38 +20,95 @@ public class MarcaServiceImpl implements MarcaService {
 
     private final MarcaRepository marcaRepository;
     private final MarcaMapper marcaMapper;
+    private final AuditoriaService auditoriaService;
 
-    public MarcaServiceImpl(MarcaRepository marcaRepository, MarcaMapper marcaMapper) {
+
+    public MarcaServiceImpl(
+            MarcaRepository marcaRepository,
+            MarcaMapper marcaMapper,
+            AuditoriaService auditoriaService) {
+
         this.marcaRepository = marcaRepository;
         this.marcaMapper = marcaMapper;
+        this.auditoriaService = auditoriaService;
     }
 
     @Override
     @Transactional
     public MarcaDtoResponse guardar(MarcaDtoRequest dto) {
+
         if (marcaRepository.existsByNombreIgnoreCase(dto.nombre())) {
-            throw new RecursoDuplicadoException("Ya existe una marca con ese nombre");
+            throw new RecursoDuplicadoException(
+                    "Ya existe una marca con ese nombre"
+            );
         }
-        return marcaMapper.entityToDto(marcaRepository.save(marcaMapper.DtoToEntity(dto)));
+
+        Marca guardada = marcaRepository.save(
+                marcaMapper.DtoToEntity(dto)
+        );
+
+        MarcaDtoResponse response = marcaMapper.entityToDto(guardada);
+
+        auditoriaService.registrar(
+                TipoOperacion.INSERT,
+                "MARCA",
+                guardada.getId(),
+                null,
+                response
+        );
+
+        return response;
     }
 
     @Override
     @Transactional
     public MarcaDtoResponse actualizar(MarcaDtoRequest dto, Long id) {
+
         Marca marca = buscarEntidad(id);
+
         marcaRepository.findByNombreIgnoreCase(dto.nombre())
                 .filter(otra -> !otra.getId().equals(id))
-                .ifPresent(otra -> { throw new RecursoDuplicadoException("Ya existe una marca con ese nombre"); });
+                .ifPresent(otra -> {
+                    throw new RecursoDuplicadoException(
+                            "Ya existe una marca con ese nombre"
+                    );
+                });
+
+        MarcaDtoResponse anterior = marcaMapper.entityToDto(marca);
+
         marcaMapper.updateEntityToDto(marca, dto);
-        return marcaMapper.entityToDto(marca);
+
+        MarcaDtoResponse actualizado = marcaMapper.entityToDto(marca);
+
+        auditoriaService.registrar(
+                TipoOperacion.UPDATE,
+                "MARCA",
+                marca.getId(),
+                anterior,
+                actualizado
+        );
+
+        return actualizado;
     }
 
     @Override
     @Transactional
     public void eliminar(Long id) {
-        marcaRepository.delete(buscarEntidad(id));
-    }
 
+        Marca marca = buscarEntidad(id);
+
+        MarcaDtoResponse anterior = marcaMapper.entityToDto(marca);
+
+        marcaRepository.delete(marca);
+
+        auditoriaService.registrar(
+                TipoOperacion.DELETE,
+                "MARCA",
+                id,
+                anterior,
+                null
+        );
+    }
     @Override
     @Transactional(readOnly = true)
     public List<MarcaDtoResponse> listar() {

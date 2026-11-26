@@ -84,7 +84,9 @@ public class SecurityConfig {
                 "http://127.0.0.1:5500",
                 "http://localhost:5500",
                 "http://192.168.200.214:8000",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "http://192.168.38.60:8081",
+                "https://sunisonfire.github.io"
         ));
 
         config.setAllowedMethods(List.of(

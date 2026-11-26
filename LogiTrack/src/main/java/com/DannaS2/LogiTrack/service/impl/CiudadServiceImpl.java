@@ -10,6 +10,8 @@ import com.DannaS2.LogiTrack.repository.CiudadRepository;
 import com.DannaS2.LogiTrack.service.CiudadService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.DannaS2.LogiTrack.model.TipoOperacion;
+import com.DannaS2.LogiTrack.service.AuditoriaService;
 
 import java.util.List;
 
@@ -18,36 +20,97 @@ public class CiudadServiceImpl implements CiudadService {
 
     private final CiudadRepository ciudadRepository;
     private final CiudadMapper ciudadMapper;
+    private final AuditoriaService auditoriaService;
 
-    public CiudadServiceImpl(CiudadRepository ciudadRepository, CiudadMapper ciudadMapper) {
+    public CiudadServiceImpl(
+            CiudadRepository ciudadRepository,
+            CiudadMapper ciudadMapper,
+            AuditoriaService auditoriaService) {
+
         this.ciudadRepository = ciudadRepository;
         this.ciudadMapper = ciudadMapper;
+        this.auditoriaService = auditoriaService;
     }
 
     @Override
     @Transactional
     public CiudadDtoResponse guardar(CiudadDtoRequest dto) {
+
         if (ciudadRepository.existsByNombreIgnoreCase(dto.nombre())) {
-            throw new RecursoDuplicadoException("Ya existe una ciudad con ese nombre");
+            throw new RecursoDuplicadoException(
+                    "Ya existe una ciudad con ese nombre"
+            );
         }
-        return ciudadMapper.entityToDto(ciudadRepository.save(ciudadMapper.DtoToEntity(dto)));
+
+        Ciudad ciudad = ciudadRepository.save(
+                ciudadMapper.DtoToEntity(dto)
+        );
+
+        CiudadDtoResponse respuesta = ciudadMapper.entityToDto(ciudad);
+
+        auditoriaService.registrar(
+                TipoOperacion.INSERT,
+                "CIUDAD",
+                ciudad.getId(),
+                null,
+                respuesta
+        );
+
+        return respuesta;
     }
 
     @Override
     @Transactional
     public CiudadDtoResponse actualizar(CiudadDtoRequest dto, Long id) {
+
         Ciudad ciudad = buscarEntidad(id);
+
         ciudadRepository.findByNombreIgnoreCase(dto.nombre())
-                .filter(otra -> !otra.getId().equals(id))   // otra ciudad distinta con ese nombre
-                .ifPresent(otra -> { throw new RecursoDuplicadoException("Ya existe una ciudad con ese nombre"); });
+                .filter(otra -> !otra.getId().equals(id))
+                .ifPresent(otra -> {
+                    throw new RecursoDuplicadoException(
+                            "Ya existe una ciudad con ese nombre"
+                    );
+                });
+
+        // Guardamos el estado anterior
+        CiudadDtoResponse anterior = ciudadMapper.entityToDto(ciudad);
+
+        // Actualizamos
         ciudadMapper.updateEntityToDto(ciudad, dto);
-        return ciudadMapper.entityToDto(ciudad);   // al ser @Transactional, el cambio se guarda solo
+
+        // Guardamos el estado nuevo
+        CiudadDtoResponse actualizado = ciudadMapper.entityToDto(ciudad);
+
+        auditoriaService.registrar(
+                TipoOperacion.UPDATE,
+                "CIUDAD",
+                ciudad.getId(),
+                anterior,
+                actualizado
+        );
+
+        return actualizado;
     }
 
     @Override
     @Transactional
     public void eliminar(Long id) {
-        ciudadRepository.delete(buscarEntidad(id));
+
+        Ciudad ciudad = buscarEntidad(id);
+
+        // Capturamos los datos antes de eliminar
+        CiudadDtoResponse anterior = ciudadMapper.entityToDto(ciudad);
+
+        ciudadRepository.delete(ciudad);
+
+        auditoriaService.registrar(
+                TipoOperacion.DELETE,
+                "CIUDAD",
+                id,
+                anterior,
+                null
+        );
     }
 
     @Override
