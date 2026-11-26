@@ -371,3 +371,15 @@ El origen permitido en CORS debe coincidir exactamente con el protocolo, la IP o
 
 **Sunnie & Moonie · LogiTrack**  
 *Beauty in every detail. Stock with a little soul.*
+
+# 12 . EXAMEN
+
+CAMBIO 1:
+![lol](![alt text](Evidencias/image-24.png))
+![lolito](![alt text](Evidencias/image-26.png))
+CAMBIO 2: 
+![lel](![alt text](Evidencias/image-25.png))
+![lelito](![alt text](Evidencias/image-27.png))
+CAMBIO 3:
+![lil](![alt text](Evidencias/image-23.png))
+![lol](![alt text](Evidencias/image-28.png))
