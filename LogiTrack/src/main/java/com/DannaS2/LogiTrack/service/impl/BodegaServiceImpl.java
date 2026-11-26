@@ -155,4 +155,11 @@ public class BodegaServiceImpl implements BodegaService {
         return personaRepository.findById(encargadoId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Encargado no encontrado: " + encargadoId));
     }
+
+    //EXAMEN
+    @Override
+    @Transactional(readOnly = true)
+    public List<BodegaDtoResponse> buscarEncargado(Long encargadoId) {
+        return bodegaRepository.findByEncargadoId(encargadoId).stream().map(bodegaMapper::entityToDto).toList();
+    }
 }

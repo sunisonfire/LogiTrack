@@ -12,4 +12,5 @@ public interface BodegaService {
     List<BodegaDtoResponse> listar();
     BodegaDtoResponse buscarId(Long id);
     List<BodegaDtoResponse> buscarCiudad(Long ciudadId);
+    List<BodegaDtoResponse> buscarEncargado(Long encargadoId);
 }

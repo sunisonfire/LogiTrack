@@ -136,4 +136,26 @@ public class BodegaController {
             @RequestParam Long ciudadId) {
         return ResponseEntity.ok(bodegaService.buscarCiudad(ciudadId));
     }
+
+    //EXAMEN
+    //1.
+    // GET /api/bodega/filtroEncargado?encargadoId=1
+    @GetMapping("/filtroEncargado")
+    @Operation(
+            summary = "Filtrar bodegas por encargado",
+            description = "Obtiene las bodegas que fueron asignadas a un empleado."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Bodegas filtradas correctamente"),
+            @ApiResponse(responseCode = "400", description = "El ID del empleado no es válido o no se envió"),
+            @ApiResponse(responseCode = "401", description = "No se ha iniciado sesión"),
+            @ApiResponse(responseCode = "403", description = "No tiene permisos para consultar bodegas")
+    })
+    public ResponseEntity<List<BodegaDtoResponse>> buscarEncargado(
+            @Parameter(description = "Identificador de l encargado por la que se desea filtrar", example = "1")
+            @RequestParam Long encargadoId) {
+        return ResponseEntity.ok(bodegaService.buscarEncargado(encargadoId));
+    }
+
+    //2.
 }

@@ -9,8 +9,6 @@ import java.util.List;
 public interface BodegaRepository extends JpaRepository<Bodega, Long> {
     List<Bodega> findByCiudadId(Long ciudadId);
 
-    List<Bodega> findByEncargadoId(Long encargadoId);
-
     List<Bodega> findByNombreContainingIgnoreCase(String texto);
 
     boolean existsByNombreIgnoreCaseAndCiudadId(String nombre, Long ciudadId);
@@ -23,5 +21,9 @@ public interface BodegaRepository extends JpaRepository<Bodega, Long> {
     ORDER BY b.nombre
 """)
     List<Object[]> obtenerStockTotalPorBodega();
+
+    //EXAMEN
+    List<Bodega> findByEncargadoId(Long encargadoId);
+
 
 }
