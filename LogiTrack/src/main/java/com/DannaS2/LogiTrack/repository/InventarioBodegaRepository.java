@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InventarioBodegaRepository extends JpaRepository<InventarioBodega, Long> {
-    List<InventarioBodega> findByBodegaId(Long bodegaId);
 
     List<InventarioBodega> findByProductoId(Long productoId);
 
@@ -17,4 +16,8 @@ public interface InventarioBodegaRepository extends JpaRepository<InventarioBode
     boolean existsByBodegaIdAndProductoId(Long bodegaId, Long productoId);
 
     List<InventarioBodega> findByCantidadLessThan(Integer limite);
+
+    //EXAMEN
+    //2.
+    List<InventarioBodega> findByBodegaId(Long bodegaId);
 }

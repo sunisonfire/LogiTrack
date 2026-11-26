@@ -93,22 +93,6 @@ public class ProductoController {
         return ResponseEntity.ok(productoService.buscarCategoria(categoria));
     }
 
-    @GetMapping("/filtroNombre")
-    @Operation(
-            summary = "Buscar productos por nombre",
-            description = "Busca productos cuyo nombre coincida con el texto proporcionado."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Búsqueda realizada correctamente"),
-            @ApiResponse(responseCode = "401", description = "No se ha iniciado sesión"),
-            @ApiResponse(responseCode = "403", description = "No tiene permisos para consultar productos")
-    })
-    public ResponseEntity<List<ProductoDtoResponse>> buscarNombre(
-            @Parameter(description = "Texto que se desea buscar en el nombre del producto", example = "mate")
-            @RequestParam String texto) {
-        return ResponseEntity.ok(productoService.buscarNombre(texto));
-    }
-
     @PutMapping("/{id}")
     @Operation(
             summary = "Actualizar un producto",
@@ -145,4 +129,24 @@ public class ProductoController {
         productoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    //EXAMEN
+    //3.
+    @GetMapping("/filtroNombre")
+    @Operation(
+            summary = "Buscar productos por nombre",
+            description = "Busca productos cuyo nombre coincida con el texto proporcionado."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Búsqueda realizada correctamente"),
+            @ApiResponse(responseCode = "401", description = "No se ha iniciado sesión"),
+            @ApiResponse(responseCode = "403", description = "No tiene permisos para consultar productos")
+    })
+    public ResponseEntity<List<ProductoDtoResponse>> buscarNombre(
+            @Parameter(description = "Texto que se desea buscar en el nombre del producto", example = "mate")
+            @RequestParam String texto) {
+        return ResponseEntity.ok(productoService.buscarNombre(texto));
+    }
+
+
 }

@@ -78,23 +78,6 @@ public class InventarioBodegaController {
         return ResponseEntity.ok(inventarioService.buscarId(id));
     }
 
-    // GET http://localhost:8080/api/inventario/filtroBodega?bodegaId=1
-    @GetMapping("/filtroBodega")
-    @Operation(
-            summary = "Filtrar inventarios por bodega",
-            description = "Obtiene los inventarios de la bodega indicada."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Inventarios filtrados correctamente"),
-            @ApiResponse(responseCode = "400", description = "El ID de la bodega no es válido o no se envió"),
-            @ApiResponse(responseCode = "401", description = "No se ha iniciado sesión"),
-            @ApiResponse(responseCode = "403", description = "No tiene permisos para consultar inventarios")
-    })
-    public ResponseEntity<List<InventarioBodegaDtoResponse>> buscarBodega(
-            @Parameter(description = "Identificador de la bodega por la que se desea filtrar", example = "1")
-            @RequestParam Long bodegaId) {
-        return ResponseEntity.ok(inventarioService.buscarBodega(bodegaId));
-    }
 
     // GET http://localhost:8080/api/inventario/filtroProducto?productoId=1
     @GetMapping("/filtroProducto")
@@ -168,5 +151,25 @@ public class InventarioBodegaController {
             @PathVariable Long id) {
         inventarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //EXAMEN
+    //2.
+    // GET http://localhost:8080/api/inventario/filtroBodega?bodegaId=1
+    @GetMapping("/filtroBodega")
+    @Operation(
+            summary = "Filtrar inventarios por bodega",
+            description = "Obtiene los inventarios de la bodega indicada."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Inventarios filtrados correctamente"),
+            @ApiResponse(responseCode = "400", description = "El ID de la bodega no es válido o no se envió"),
+            @ApiResponse(responseCode = "401", description = "No se ha iniciado sesión"),
+            @ApiResponse(responseCode = "403", description = "No tiene permisos para consultar inventarios")
+    })
+    public ResponseEntity<List<InventarioBodegaDtoResponse>> buscarBodega(
+            @Parameter(description = "Identificador de la bodega por la que se desea filtrar", example = "1")
+            @RequestParam Long bodegaId) {
+        return ResponseEntity.ok(inventarioService.buscarBodega(bodegaId));
     }
 }

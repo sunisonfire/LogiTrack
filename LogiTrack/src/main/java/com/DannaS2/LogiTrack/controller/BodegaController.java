@@ -157,5 +157,5 @@ public class BodegaController {
         return ResponseEntity.ok(bodegaService.buscarEncargado(encargadoId));
     }
 
-    //2.
+
 }

@@ -11,7 +11,10 @@ public interface InventarioBodegaService {
     void eliminar(Long id);
     List<InventarioBodegaDtoResponse> listar();
     InventarioBodegaDtoResponse buscarId(Long id);
-    List<InventarioBodegaDtoResponse> buscarBodega(Long bodegaId);
     List<InventarioBodegaDtoResponse> buscarProducto(Long productoId);
     List<InventarioBodegaDtoResponse> buscarStockBajo(Integer limite);
+
+    //EXAMEN
+    //2.
+    List<InventarioBodegaDtoResponse> buscarBodega(Long bodegaId);
 }

@@ -84,12 +84,6 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<InventarioBodegaDtoResponse> buscarBodega(Long bodegaId) {
-        return inventarioRepository.findByBodegaId(bodegaId).stream().map(inventarioMapper::entityToDto).toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<InventarioBodegaDtoResponse> buscarProducto(Long productoId) {
         return inventarioRepository.findByProductoId(productoId).stream().map(inventarioMapper::entityToDto).toList();
     }
@@ -113,5 +107,13 @@ public class InventarioBodegaServiceImpl implements InventarioBodegaService {
     private Producto obtenerProducto(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Producto no encontrado: " + id));
+    }
+
+    //EXAMEN
+    //2.
+    @Override
+    @Transactional(readOnly = true)
+    public List<InventarioBodegaDtoResponse> buscarBodega(Long bodegaId) {
+        return inventarioRepository.findByBodegaId(bodegaId).stream().map(inventarioMapper::entityToDto).toList();
     }
 }
